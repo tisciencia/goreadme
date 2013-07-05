@@ -167,7 +167,7 @@ noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $wind
 
   $scope.updateTitle = function() {
     var ur = $scope.unread['all'] || 0;
-    document.title = 'go read' + (ur != 0 ? ' (' + ur + ')' : '');
+    document.title = 'go reader' + (ur != 0 ? ' (' + ur + ')' : '');
   };
 
   $scope.setCurrent = function(i, noClose, isClick) {

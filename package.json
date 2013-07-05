@@ -6,7 +6,8 @@
     "jade": "*",
     "ejs": "~0.8.4",
     "passport-google-oauth": "~0.1.5",
-    "passport": "~0.1.17"
+    "passport": "~0.1.17",
+    "unzip": "~0.1.8"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>no read</title>
+  <title>go reader</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -319,7 +319,6 @@
                 <b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
-                <li><a href="/import-google-reader">import google reader</a></li>
                 <li><a href="#" ng-click="setAddSubscription()">add subscription</a></li>
                 <li><a href="#" ng-click="shown = 'import-opml'">import opml</a></li>
                 <li class="divider"></li>
@@ -510,8 +509,7 @@
   <div ng-show="nothing()" class="row-fluid top-margin">
     <div class="offset2 span8">
       <p>You don't have any feeds.</p>
-      <p>You should probably add some.</p>
-      <p><a href="/import-reader" class="btn btn-primary">Import from Google Reader</a></p>
+      <p>To import from Google Reader, <a href="https://www.google.com/takeout/?pli=1#custom:reader">download your reader takeout here</a>, then upload it in the <code>Upload OPML file</code> section below.</p>
     </div>
   </div>
 
@@ -530,11 +528,12 @@
   <div class="row-fluid top-margin" ng-show="shown == 'import-opml' || nothing()">
     <div class="offset2 span8">
       <form id="import-opml-form" enctype="multipart/form-data" method="POST" action="/import-opml">
-      <fieldset>
-        <legend>Upload OPML file</legend>
-        <input type="file" name="file">
-        <p><button ng-click="importOpml()" type="submit" class="btn">upload</button></p>
-      </fieldset>
+        <fieldset>
+          <legend>Upload OPML file</legend>
+          <input type="file" name="file">
+          <p><button ng-click="importOpml()" type="submit" class="btn">upload</button></p>
+          <p>You can also upload your <a href="https://www.google.com/takeout/?pli=1#custom:reader">Google Reader takeout</a> file directly.</p>
+        </fieldset>
       </form>
     </div>
   </div>

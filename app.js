@@ -67,6 +67,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.post('/import-opml', routes.importOmpl);
 app.get('/list-feeds', function (req, res) {
   res.send('');
 });
