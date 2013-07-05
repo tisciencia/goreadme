@@ -4,7 +4,12 @@
   "dependencies": {
     "sass-bootstrap": "~2.3.0",
     "modernizr": "~2.6.2",
-    "jquery": "~1.9.1"
+    "jquery": "~1.9.1",
+    "underscore": "~1.4.4",
+    "jquery.ui": "~1.10.3",
+    "jquery-form": "~3.32.0-2013.04.09",
+    "mousetrap": "~1.4.3",
+    "moment": "~2.0.0"
   },
   "devDependencies": {}
 }
