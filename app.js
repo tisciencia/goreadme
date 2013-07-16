@@ -3,10 +3,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , passport = require('passport')
-  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
-var GOOGLE_CLIENT_ID = "241355542157.apps.googleusercontent.com";
-var GOOGLE_CLIENT_SECRET = "Z-TL2zhvPuV4AAJn7H7bNGu_";
+  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+  , settings = require('config/settings');
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -24,8 +22,8 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
+    clientID: settings.GOOGLE_CLIENT_ID,
+    clientSecret: settings.GOOGLE_CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
