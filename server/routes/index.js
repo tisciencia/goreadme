@@ -1,8 +1,8 @@
 var fs = require('fs')
-  , unzip = require('unzip');
+  , unzip = require('unzip')
+  , OpmlParser = require('opmlparser');
 
 exports.index = function(req, res){
-  console.log(req.user);
   res.render('index.html', {user: req.user, admin: false});
 };
 
@@ -19,23 +19,24 @@ exports.importOmpl = function(req, res) {
   if(req.files) {
     fs.createReadStream(req.files.file.path)
       .pipe(unzip.Parse())
+      .on('error', function(error) {
+        console.log(error);
+      })
       .on('entry', function (entry) {
         var fileName = entry.path;
-        console.log(fileName);
-//        var type = entry.type; // 'Directory' or 'File'
-//        var size = entry.size;
-//        if (fileName === "this IS the file I'm looking for") {
-//          entry.pipe(fs.createWriteStream('output/path'));
-//        } else {
-//          entry.autodrain();
-//        }
+        if(/subscriptions\.xml/.test(fileName)) {
+          entry.pipe(new OpmlParser())
+            .on('error', function(error) {
+              console.log(error);
+            })
+            .on('feed', function(feed){
+              //feeds.push(feed);
+            })
+            .on('end', function(){
+              console.log('end import opml');
+            });
+        }
       });
   }
-
-//  var newPath = __dirname + "/uploads/" + req.files.file.name;
-//  fs.rename(req.files.file.path, newPath, function(error) {
-//    console.log(error);
-//  });
-
   res.send('');
 };

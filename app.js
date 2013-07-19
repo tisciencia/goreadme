@@ -4,7 +4,8 @@ var express = require('express')
   , path = require('path')
   , passport = require('passport')
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
-  , settings = require('config/settings');
+  , settings = require('./config/settings')
+  , googleapis = require('googleapis');
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -91,6 +92,52 @@ app.get('/login/google',
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login/google' }),
   function(req, res) {
+    var user = req.user._json;
+
+    var compute = new googleapis.auth.Compute();
+    var datasetId = '';
+
+    function googledatastore(cb) {
+      compute.authorize(function(err, result) {
+        console.log(err);
+        console.log(result);
+        console.log('xxx');
+        googleapis.discover('datastore', 'v1beta1')
+          .withAuthClient(compute)
+          .execute(function(err, client) {
+            cb(err, client.datastore.datasets);
+          });
+      });
+    }
+
+    console.log('yyy');
+
+    googledatastore(function(err, dataStore) {
+      console.log('aqui');
+      console.assert(!err, err);
+
+      dataStore.blindWrite({
+        datasetId: datasetId,
+        mutation: {
+          upsert: [{
+            key: user.email,
+            properties: {
+              name: { values: [{ stringValue: user.name }] },
+              email:  { values: [{ stringValue: user.email }] },
+              link:  { values: [{ stringValue: user.link }] },
+              picture:  { values: [{ stringValue: user.picture }] },
+              locale:  { values: [{ stringValue: user.locale }] }
+            }
+          }]
+        }
+      })
+      .execute(function(err, result) {
+          console.assert(!err, err);
+          console.log('funcionou');
+      });
+
+    });
+
     res.redirect('/');
   });
 
