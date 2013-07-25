@@ -17,6 +17,7 @@ exports.importOmpl = function(req, res) {
               console.log(error);
             })
             .on('feed', function(feed){
+              console.log(feed);
               //feeds.push(feed);
             })
             .on('end', function(){
