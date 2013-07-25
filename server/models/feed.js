@@ -9,7 +9,9 @@ var feed = function() {
     description: String,
     type: String,
     language: String,
-    version: String
+    version: String,
+    folder: String,
+    user: [ { type: Schema.ObjectId, ref: 'User' } ]
   });
 
   var _model = mongoose.model('Feed', _feedSchema);

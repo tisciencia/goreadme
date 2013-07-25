@@ -7,8 +7,7 @@ var user = function() {
     name: String,
     link: String,
     picture: String,
-    locale: String,
-    feeds: [ { type: Schema.ObjectId, ref: 'Feed' } ]
+    locale: String
   });
 
   var _model = mongoose.model('User', _userSchema);
