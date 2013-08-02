@@ -11,10 +11,23 @@ var feed = function() {
     language: String,
     version: String,
     folder: String,
-    user: [ { type: Schema.ObjectId, ref: 'User' } ]
+    user: [ { type: Schema.ObjectId, ref: 'User' } ],
+    items: [ { type: Schema.ObjectId, ref: 'FeedItem' } ]
   });
 
   var _model = mongoose.model('Feed', _feedSchema);
+
+  var _findAllBy = function(model, success, fail) {
+    _model.find(model)
+      .populate('items')
+      .exec(function(error, feeds) {
+      if(error) {
+        fail(error);
+      } else {
+        success(feeds);
+      }
+    });
+  }
 
   var _findBy = function(model, success, fail) {
     _model.findOne(model, function(error, feed) {
@@ -48,7 +61,8 @@ var feed = function() {
   return {
     Model: _model,
     create: _create,
-    findBy: _findBy
+    findBy: _findBy,
+    findAllBy: _findAllBy
   }
 }();
 

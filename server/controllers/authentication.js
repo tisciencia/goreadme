@@ -12,7 +12,7 @@ exports.googleCallback = function(req, res) {
   var loggedUser = {};
   _.extend(loggedUser, req.user._json);
 
-  user.findBy(loggedUser, function(userFound) {
+  user.findBy({email: loggedUser.email}, function(userFound) {
     if(!userFound) {
       var newUser = new user.Model();
       _.extend(newUser, loggedUser);
@@ -21,4 +21,12 @@ exports.googleCallback = function(req, res) {
   });
 
   res.redirect('/');
+}
+
+exports.verifyUserAuthenticated = function(req, res, next) {
+  if(!req.session.passport.user) {
+    res.redirect('/');
+  } else {
+    next();
+  }
 }

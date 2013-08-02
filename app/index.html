@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="noReadApp">
+<html lang="en" ng-app="goReaderApp">
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -232,7 +232,7 @@
     }
   </style>
 </head>
-<body ng-controller="NoreadCtrl" class="ng-cloak">
+<body ng-controller="GoreaderCtrl" class="ng-cloak">
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -391,34 +391,34 @@
           <button class="btn btn-primary" ng-click="setAddSubscription()">subscribe</button>
         <li>
         <li class="all-subs hand" ng-click="setActiveFeed()">
-          all items {{unread.all || 0}})
+          all items ({{unread.all || 0}})
         </li>
       </ul>
       <ul class="unstyled" ui-sortable="sortableOptions" ng-model="feeds">
         <li ng-repeat="f in feeds" ng-hide="shouldHideEmpty(f)">
-          <div class="hand feed-title" ng-hide="f.Outline" ng-click="setActiveFeed(f.XmlUrl)">
-            <img ng-src="{{icons[f.XmlUrl] || '/static/img/feed.png'}}" class="feed-icon">
-            <span ng-class="{bold: unread['feeds'][f.XmlUrl]}" ng-bind="f.Title"></span>
-							<span ng-show="unread['feeds'][f.XmlUrl]">
-								{{unread['feeds'][f.XmlUrl]}}
+          <div class="hand feed-title" ng-hide="f.Outline" ng-click="setActiveFeed(f.xmlurl)">
+            <img ng-src="{{icons[f.xmlurl] || '/images/feed.png'}}" class="feed-icon">
+            <span ng-class="{bold: unread['feeds'][f.xmlurl]}" ng-bind="f.title"></span>
+							<span ng-show="unread['feeds'][f.xmlurl]">
+								{{unread['feeds'][f.xmlurl]}}
 							</span>
           </div>
-          <div ng-show="f.Outline">
-            <div class="hand folder-title" ng-show="f.Outline">
-              <i class="icon-folder-open hand" ng-hide="opts.folderClose[f.Title]" ng-click="opts.folderClose[f.Title] = true; saveOpts()"></i>
-              <i class="icon-folder-close hand" ng-show="opts.folderClose[f.Title]" ng-click="opts.folderClose[f.Title] = false; saveOpts()"></i>
-              <span ng-class="{bold: unread['folders'][f.Title]}" ng-bind="f.Title" ng-click="setActiveFolder(f.Title)"></span>
-								<span ng-show="unread['folders'][f.Title]">
-									{{unread['folders'][f.Title]}}
+          <div ng-show="f.outline">
+            <div class="hand folder-title" ng-show="f.outline">
+              <i class="icon-folder-open hand" ng-hide="opts.folderClose[f.Title]" ng-click="opts.folderClose[f.title] = true; saveOpts()"></i>
+              <i class="icon-folder-close hand" ng-show="opts.folderClose[f.Title]" ng-click="opts.folderClose[f.title] = false; saveOpts()"></i>
+              <span ng-class="{bold: unread['folders'][f.title]}" ng-bind="f.Title" ng-click="setActiveFolder(f.title)"></span>
+								<span ng-show="unread['folders'][f.title]">
+									{{unread['folders'][f.title]}}
 								</span>
             </div>
-            <ul class="unstyled" ng-hide="opts.folderClose[f.Title]" ui-sortable="sortableOptions" ng-model="f.Outline">
-              <li ng-repeat="o in f.Outline" ng-hide="shouldHideEmpty(o)">
-                <div class="hand feed-title feed-child" ng-click="setActiveFeed(o.XmlUrl)">
-                  <img ng-src="{{icons[o.XmlUrl] || '/static/img/feed.png'}}" class="feed-icon hand">
-                  <span ng-class="{bold: unread['feeds'][o.XmlUrl]}" ng-bind="o.Title"></span>
-										<span ng-show="unread['feeds'][o.XmlUrl]">
-											{{unread['feeds'][o.XmlUrl]}}
+            <ul class="unstyled" ng-hide="opts.folderClose[f.title]" ui-sortable="sortableOptions" ng-model="f.outline">
+              <li ng-repeat="o in f.outline" ng-hide="shouldHideEmpty(o)">
+                <div class="hand feed-title feed-child" ng-click="setActiveFeed(o.xmlurl)">
+                  <img ng-src="{{icons[o.xmlurl] || '/images/feed.png'}}" class="feed-icon hand">
+                  <span ng-class="{bold: unread['feeds'][o.xmlurl]}" ng-bind="o.title"></span>
+										<span ng-show="unread['feeds'][o.xmlurl]">
+											{{unread['feeds'][o.xmlurl]}}
 										</span>
                 </div>
               </li>

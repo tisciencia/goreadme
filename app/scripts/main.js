@@ -13,9 +13,9 @@ function countProperties(obj) {
   return count;
 }
 
-var noReadAppModule = angular.module('noReadApp', ['ui.sortable']);
+var goReaderAppModule = angular.module('goReaderApp', ['ui.sortable']);
 
-noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $window) {
+goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $window) {
 
   $scope.accessToken = "";
   $scope.admin = false;
@@ -100,7 +100,7 @@ noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $wind
     delete $scope.currentStory;
     $http.get($('#refresh').attr('data-url-feeds'))
       .success(function(data) {
-        $scope.feeds = data.Opml || [];
+        $scope.feeds = data || [];
         $scope.numfeeds = 0;
         $scope.stories = [];
         $scope.unreadStories = {};
@@ -111,10 +111,10 @@ noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $wind
 
         var loadStories = function(feed) {
           $scope.numfeeds++;
-          $scope.xmlurls[feed.XmlUrl] = feed;
-          var stories = data.Stories[feed.XmlUrl] || [];
+          $scope.xmlurls[feed.xmlurl] = feed;
+          var stories = feed.items || [];
           for(var i = 0; i < stories.length; i++) {
-            $scope.procStory(feed.XmlUrl, stories[i], false);
+            $scope.procStory(feed.xmlurl, stories[i], false);
             if ($scope.last < stories[i].Date) {
               $scope.last = stories[i].Date;
             }
@@ -126,12 +126,12 @@ noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $wind
         for(var i = 0; i < $scope.feeds.length; i++) {
           var f = $scope.feeds[i];
 
-          if (f.XmlUrl) {
+          if (f.xmlurl) {
             loadStories(f);
-          } else if (f.Outline) {  // check for empty groups
-            for(var j = 0; j < f.Outline.length; j++) {
-              loadStories(f.Outline[j]);
-              $scope.xmlurls[f.Outline[j].XmlUrl].folder = f.Title;
+          } else if (f.outline) {  // check for empty groups
+            for(var j = 0; j < f.outline.length; j++) {
+              loadStories(f.outline[j]);
+              $scope.xmlurls[f.outline[j].xmlurl].folder = f.title;
             }
           }
         }
@@ -214,22 +214,23 @@ noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $wind
 
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline) {
-        $scope.unread['folders'][f.Title] = 0;
-        for (var j = 0; j < f.Outline.length; j++) {
-          $scope.unread['feeds'][f.Outline[j].XmlUrl] = 0;
+      if (f.outline) {
+        $scope.unread['folders'][f.title] = 0;
+        for (var j = 0; j < f.outline.length; j++) {
+          $scope.unread['feeds'][f.outline[j].xmlurl] = 0;
         }
       } else {
-        $scope.unread['feeds'][f.XmlUrl] = 0;
+        $scope.unread['feeds'][f.xmlurl] = 0;
       }
     }
 
     for (var i = 0; i < $scope.stories.length; i++) {
       var s = $scope.stories[i];
+      console.log(s.guid);
       if ($scope.unreadStories[s.guid]) {
         $scope.unread['all']++;
-        $scope.unread['feeds'][s.feed.XmlUrl]++;
-        var folder = $scope.xmlurls[s.feed.XmlUrl].folder;
+        $scope.unread['feeds'][s.feed.xmlurl]++;
+        var folder = $scope.xmlurls[s.feed.xmlurl].folder;
         if (folder) {
           $scope.unread['folders'][folder]++;
         }
@@ -729,7 +730,7 @@ noReadAppModule.controller('NoreadCtrl', function($scope, $http, $timeout, $wind
 
 });
 
-noReadAppModule.directive('stopEvent', function() {
+goReaderAppModule.directive('stopEvent', function() {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {

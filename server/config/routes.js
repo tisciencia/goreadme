@@ -10,10 +10,10 @@ module.exports = function(app) {
 
   app.get('/', home.index);
 
-  app.get('/list-feeds', subscriptions.listFeeds);
-  app.post('/add-subscription', subscriptions.create);
+  app.get('/list-feeds', authentication.verifyUserAuthenticated, subscriptions.listFeeds);
+  app.post('/add-subscription', authentication.verifyUserAuthenticated, subscriptions.create);
 
-  app.post('/import-opml', feedImport.importOmpl);
+  app.post('/import-opml', authentication.verifyUserAuthenticated, feedImport.importOmpl);
 
   app.get('/login/google',
     passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
@@ -22,4 +22,5 @@ module.exports = function(app) {
   });
   app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login/google' }), authentication.googleCallback);
+  app.get('/logout', authentication.logout);
 };
