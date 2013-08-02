@@ -226,7 +226,6 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
 
     for (var i = 0; i < $scope.stories.length; i++) {
       var s = $scope.stories[i];
-      console.log(s.guid);
       if ($scope.unreadStories[s.guid]) {
         $scope.unread['all']++;
         $scope.unread['feeds'][s.feed.xmlurl]++;
@@ -744,7 +743,7 @@ goReaderAppModule.directive('stopEvent', function() {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {
-      if(scope.$parent.stories[scope.$index].Starred) {
+      if(scope.$parent.stories[scope.$index].starred) {
         element.addClass('icon-star');
       } else {
         element.addClass('icon-star-empty');

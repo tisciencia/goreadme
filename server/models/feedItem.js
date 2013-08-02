@@ -9,7 +9,8 @@ var feedItem = function() {
     content: String,
     publishedDate: { type: Date },
     read: Boolean,
-    starred: Boolean
+    starred: Boolean,
+    author: String
   });
 
   var _model = mongoose.model('FeedItem', _feedItemSchema);

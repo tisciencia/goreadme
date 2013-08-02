@@ -108,6 +108,7 @@ function addItemsToSubscription (subscription) {
           newFeedItem.description = item.description;
           newFeedItem.content = item.encoded;
           newFeedItem.publishedDate = item.pubDate;
+          newFeedItem.author = item.creator;
           subscription.items.push(newFeedItem);
           newFeedItem.save();
           subscription.save();
@@ -115,7 +116,7 @@ function addItemsToSubscription (subscription) {
       });
     } else {
       queryResult.query.results.feed.entry.forEach(function(item) {
-        itemExist = _.find(subscription.items, function(i) { return i.link === item.link});
+        itemExist = _.find(subscription.items, function(i) { return i.link === item.link.href});
         if(!itemExist) {
           newFeedItem = new feedItem.Model();
           newFeedItem.link = item.link.href;
@@ -123,6 +124,8 @@ function addItemsToSubscription (subscription) {
           newFeedItem.description = item.content.content;
           newFeedItem.content = item.content.content;
           newFeedItem.publishedDate = item.updated;
+          console.log(item.author);
+          newFeedItem.author = "";
           subscription.items.push(newFeedItem);
           newFeedItem.save();
           subscription.save();
