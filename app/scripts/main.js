@@ -342,6 +342,11 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     if (typeof $scope.contents[s.guid] !== 'undefined') {
       return;
     }
+    // for the moment when I'm downloading all contents at startup
+    if (s.content && typeof(s.content) === 'string') {
+      $scope.contents[s.guid] = s.content;
+      return;
+    }
     $scope.toFetch.push(s);
     if (!$scope.fetchPromise) {
       $scope.fetchPromise = $timeout($scope.fetchContents);
@@ -359,8 +364,8 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     for (var i = 0; i < tofetch.length; i++) {
       $scope.contents[tofetch[i].guid] = '';
       data.push({
-        Feed: tofetch[i].feed.XmlUrl,
-        Story: tofetch[i].Id
+        Feed: tofetch[i].feed.xmlurl,
+        Story: tofetch[i]._id
       });
     }
     $http.post($('#mark-all-read').attr('data-url-contents'), data)
