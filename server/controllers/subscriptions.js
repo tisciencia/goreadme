@@ -33,39 +33,39 @@ exports.create = function(req, res) {
 
   var apiUrl = queryFeedUrl(feedUrl);
 
-  function processFeed(subscription) {
+  function processFeed(queryResults) {
     var newSubscription = new feed.Model()
       , channel;
 
     user.findBy({ email: req.session.passport.user._json.email }, function(currentUser) {
       newSubscription.user = currentUser._id;
-      if(subscription.query.results.rss) {
-        channel = subscription.query.results.rss.channel;
+      if(queryResults.query.results.rss) {
+        channel = queryResults.query.results.rss.channel;
         feed.findBy({ htmlurl: channel.link[0] }, function(currentFeed) {
           if (!currentFeed) {
             newSubscription.title = channel.title;
             newSubscription.description = channel.description;
             newSubscription.language = channel.language;
             newSubscription.htmlurl = channel.link[0];
-            newSubscription.xmlurl = channel.link[1].href;
+            newSubscription.xmlurl = channel.link[1].href || req.body.url;
             newSubscription.updated = channel.lastBuildDate;
             newSubscription.type = 'rss';
             newSubscription.save();
-            addItemsToSubscription(newSubscription);
+            addItemsToSubscription(newSubscription, queryResults);
           }
         });
       } else {
-        channel = subscription.query.results.feed;
+        channel = queryResults.query.results.feed;
         feed.findBy({ htmlurl: channel.id }, function(currentFeed) {
           if (!currentFeed) {
             newSubscription.title = channel.title;
             newSubscription.language = channel.language;
             newSubscription.htmlurl = channel.id;
-            newSubscription.xmlurl = channel.link[0].href;
+            newSubscription.xmlurl = channel.link[0].href || req.body.url;
             newSubscription.updated = channel.updated;
             newSubscription.type = 'atom';
             newSubscription.save();
-            addItemsToSubscription(newSubscription);
+            addItemsToSubscription(newSubscription, queryResults);
           }
         });
       }
@@ -93,12 +93,10 @@ function queryFeedUrl(feedUrl, callback) {
   return apiUrl;
 }
 
-function addItemsToSubscription (subscription) {
-  var apiUrl = queryFeedUrl(subscription.xmlurl, "updateSubscription");
-
+function addItemsToSubscription (subscription, queryResults) {
   function updateSubscription(queryResult) {
     var itemExist, newFeedItem;
-    if(subscription.type === 'rss') {
+    if(queryResult.query.results.rss) {
       queryResult.query.results.rss.channel.item.forEach(function(item) {
         itemExist = _.find(subscription.items, function(i) { return i.link === item.link});
         if(!itemExist) {
@@ -124,7 +122,6 @@ function addItemsToSubscription (subscription) {
           newFeedItem.description = item.content.content;
           newFeedItem.content = item.content.content;
           newFeedItem.publishedDate = item.updated;
-          console.log(item.author);
           newFeedItem.author = "";
           subscription.items.push(newFeedItem);
           newFeedItem.save();
@@ -133,12 +130,16 @@ function addItemsToSubscription (subscription) {
       });
     }
   }
-
-  request(apiUrl, function(error, response, body) {
-    if(error) {
-      console.log('error: ' + error);
-    }
-    eval(body);
-  });
+  if(!isNaN(queryResults)) {
+    var apiUrl = queryFeedUrl(subscription.xmlurl, "updateSubscription");
+    request(apiUrl, function(error, response, body) {
+      if(error) {
+        console.log('error: ' + error);
+      }
+      eval(body);
+    });
+  } else {
+    updateSubscription(queryResults);
+  }
 
 }

@@ -12,6 +12,7 @@ module.exports = function(app) {
 
   app.get('/list-feeds', authentication.verifyUserAuthenticated, subscriptions.listFeeds);
   app.post('/add-subscription', authentication.verifyUserAuthenticated, subscriptions.create);
+  app.post('/user/get-contents', function(req, res){res.send('')}); // change this
 
   app.post('/import-opml', authentication.verifyUserAuthenticated, feedImport.importOmpl);
 
