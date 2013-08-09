@@ -85,7 +85,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
   $scope.procStory = function(xmlurl, story, read) {
     story.read = read;
     story.feed = $scope.xmlurls[xmlurl];
-    story.guid = xmlurl + '|' + story.Id;
+    story.guid = xmlurl + '|' + story._id;
     if (!story.Title) {
       story.Title = '(title unknown)';
     }
@@ -114,12 +114,12 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
           $scope.xmlurls[feed.xmlurl] = feed;
           var stories = feed.items || [];
           for(var i = 0; i < stories.length; i++) {
-            $scope.procStory(feed.xmlurl, stories[i], false);
+            $scope.procStory(feed.xmlurl, stories[i], stories[i].read);
             if ($scope.last < stories[i].Date) {
               $scope.last = stories[i].Date;
             }
             $scope.stories.push(stories[i]);
-            $scope.unreadStories[stories[i].guid] = true;
+            $scope.unreadStories[stories[i].guid] = !stories[i].read;
           }
         };
 
@@ -193,7 +193,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
 
   $scope.shouldHideEmpty = function(f) {
     if (!$scope.opts.hideEmpty) return false;
-    var cnt = f.Outline ? $scope.unread['folders'][f.Title] : $scope.unread['feeds'][f.XmlUrl];
+    var cnt = f.Outline ? $scope.unread['folders'][f.title] : $scope.unread['feeds'][f.xmlurl];
     return cnt == 0;
   };
 
@@ -254,8 +254,8 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
         if ($scope.opts.mode == 'unread') s.remove = true;
         s.read = true;
         ss.push({
-          Feed: s.feed.XmlUrl,
-          Story: s.Id
+          Feed: s.feed.xmlurl,
+          Story: s._id
         });
         delete $scope.unreadStories[s.guid];
       }
@@ -411,7 +411,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     if ($scope.activeFolder) {
       for (var i = 0; i < $scope.stories.length; i++) {
         var s = $scope.stories[i];
-        if ($scope.xmlurls[s.feed.XmlUrl].folder == $scope.activeFolder) {
+        if ($scope.xmlurls[s.feed.xmlurl].folder == $scope.activeFolder) {
           $scope.dispStories.push(s);
         }
       }
@@ -426,7 +426,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
       } else {
         for (var i = 0; i < $scope.stories.length; i++) {
           var s = $scope.stories[i];
-          if (s.feed.XmlUrl == $scope.activeFeed) {
+          if (s.feed.xmlurl == $scope.activeFeed) {
             $scope.dispStories.push(s);
           }
         }
