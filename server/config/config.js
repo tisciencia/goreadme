@@ -3,6 +3,6 @@ module.exports = {
   app: {
     name: 'go reader'
   },
-  port: 3000,
-  db: 'mongodb://localhost/goreader'
+  port: process.env.PORT || 3000,
+  db: process.env.MONGO_URL || 'mongodb://localhost/goreader'
 };

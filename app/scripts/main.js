@@ -772,7 +772,7 @@ goReaderAppModule.directive('stopEvent', function() {
     restrict: 'A',
     link: function(scope, element, attr) {
       updateStarredItem(element, scope.s.starred);
-  
+
       $(element).on('click', function() {
         updateStarredItem($(this), $(element).hasClass('icon-star-empty'));
       });
