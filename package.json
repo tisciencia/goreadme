@@ -42,8 +42,4 @@
   "engines": {
     "node": ">=0.8.0"
   }
-//  ,
-//  "scripts": {
-//    "postinstall": "bower install"
-//  }
 }
