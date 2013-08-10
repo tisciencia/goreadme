@@ -86,8 +86,8 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     story.read = read;
     story.feed = $scope.xmlurls[xmlurl];
     story.guid = xmlurl + '|' + story._id;
-    if (!story.Title) {
-      story.Title = '(title unknown)';
+    if (!story.title) {
+      story.title = '(title unknown)';
     }
     var today = new Date().toDateString();
     var d = new Date(story.Date * 1000);
@@ -284,7 +284,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
 
   $scope.active = function() {
     if ($scope.activeFolder) return $scope.activeFolder;
-    if ($scope.activeFeed) return $scope.xmlurls[$scope.activeFeed].Title;
+    if ($scope.activeFeed) return $scope.xmlurls[$scope.activeFeed].title;
     return 'all items';
   };
 
@@ -466,7 +466,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
   $scope.rename = function(feed) {
     var name = prompt('Rename to');
     if (!name) return;
-    $scope.xmlurls[feed].Title = name;
+    $scope.xmlurls[feed].title = name;
     $scope.uploadOpml();
   };
 
@@ -475,8 +475,8 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     if (!name) return;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline && f.Title == folder) {
-        f.Title = name;
+      if (f.Outline && f.title == folder) {
+        f.title = name;
         $scope.activeFolder = name;
         break;
       }
@@ -488,7 +488,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     if (!confirm('Delete ' + folder + ' and unsubscribe from all feeds in it?')) return;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline && f.Title == folder) {
+      if (f.Outline && f.title == folder) {
         $scope.feeds.splice(i, 1);
         break;
       }
@@ -498,7 +498,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
   };
 
   $scope.unsubscribe = function(feed) {
-    if (!confirm('Unsubscribe from ' + $scope.xmlurls[feed].Title + '?')) return;
+    if (!confirm('Unsubscribe from ' + $scope.xmlurls[feed].title + '?')) return;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
       if (f.Outline) {
@@ -542,7 +542,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
             break;
           }
         }
-        if (f.Title == folder)
+        if (f.title == folder)
           found = true;
       } else if (f.XmlUrl == url) {
         feed = f;
@@ -556,12 +556,12 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
       if (!found) {
         $scope.feeds.push({
           Outline: [],
-          Title: folder
+          title: folder
         });
       }
       for (var i = 0; i < $scope.feeds.length; i++) {
         var f = $scope.feeds[i];
-        if (f.Outline && f.Title == folder) {
+        if (f.Outline && f.title == folder) {
           $scope.feeds[i].Outline.push(feed);
         }
       }
@@ -724,13 +724,25 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
       stories = $scope.stories,
       l = stories.length;
     for(var i = 0; i < l; i++) {
-      if(stories[i].Id == story.Id) {
-        $scope.stories[i].Starred = !stories[i].Starred;
+      if(stories[i]._id == story._id) {
+        $scope.stories[i].starred = !stories[i].starred;
       }
     }
-    $scope.http('POST', '/user/mark-starred', {story: story.Id, starred: story.Starred});
+    $scope.http('POST', '/item/mark-starred', {storyId: story._id, starred: story.starred});
     $scope.updateStories();
   };
+
+  $scope.markUnread = function(storyId) {
+    var stories = $scope.stories
+      , i;
+    for(i = 0; i < stories.length; i++) {
+      if(stories[i]._id === storyId) {
+        $scope.stories[i].read = !$scope.unread;
+      }
+    }
+    $scope.http('POST', '/item/mark-unread', {storyId: storyId, unread: $scope.unread})
+    $scope.updateStories();
+  }
 
 });
 
@@ -745,14 +757,25 @@ goReaderAppModule.directive('stopEvent', function() {
   };
 })
 .directive('starred', function() {
+
+    function updateStarredItem(element, starred) {
+      if(starred) {
+        element.removeClass('icon-star-empty');
+        element.addClass('icon-star');
+      } else {
+        element.removeClass('icon-star');
+        element.addClass('icon-star-empty');
+      }
+    }
+
   return {
     restrict: 'A',
     link: function(scope, element, attr) {
-      if(scope.$parent.stories[scope.$index].starred) {
-        element.addClass('icon-star');
-      } else {
-        element.addClass('icon-star-empty');
-      }
+      updateStarredItem(element, scope.s.starred);
+  
+      $(element).on('click', function() {
+        updateStarredItem($(this), $(element).hasClass('icon-star-empty'));
+      });
     }
   };
 });

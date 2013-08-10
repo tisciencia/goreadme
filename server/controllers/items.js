@@ -8,6 +8,18 @@ exports.markAsRead = function(req, res) {
   res.send('');
 }
 
+exports.markAsUnread = function(req, res) {
+  var body = req.body;
+  updateFieldForItem(body.storyId, "read", !body.unread);
+  res.send('');
+}
+
+exports.markStarred = function(req, res) {
+  var body = req.body;
+  updateFieldForItem(body.storyId, "starred", body.starred);
+  res.send('');
+}
+
 function _markStoryAsRead(story) {
   feedItem.findOneBy({"_id": story.Story}, function(itemFound) {
     if(itemFound) {
@@ -15,4 +27,17 @@ function _markStoryAsRead(story) {
       itemFound.save();
     }
   });
+}
+
+function updateFieldForItem(itemId, field, value, cb) {
+  feedItem.findOneBy({ _id: itemId }, function(itemFound) {
+    if(itemFound) {
+      itemFound[field] = value;
+      itemFound.save();
+    }
+    if (cb && typeof(cb) === 'function') {
+      cb();
+    }
+  })
+
 }

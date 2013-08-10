@@ -104,6 +104,16 @@
       font-weight: bold;
       padding: 10px 0;
     }
+    .story-footer {
+        background-color: #f5f5f5;
+        padding-left: 7px;
+        height: 25px;
+        overflow: hidden;
+    }
+    .story-footer a {
+        color: #333;
+        text-decoration: none;
+    }
     #story-list {
       position: absolute;
       left: 245px;
@@ -241,7 +251,7 @@
         <span class="icon-bar"></span>
       </button>
       <div class="container-fluid">
-        <a class="brand" href="/">no read</a>
+        <a class="brand" href="/">go reader</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li ng-class="{active: shown == 'about'}"><a href="#" ng-click="shown = 'about'">about</a></li>
@@ -377,9 +387,9 @@
         </p>
         <h1>Help</h1>
         <p>Problems? Try one of these:</p>
-        <p>Tweet me <a href="https://twitter.com/mjibson">@mjibson</a></p>
-        <p>Email me at <a href="mailto:matt.jibson@gmail.com">matt.jibson@gmail.com</a></p>
-        <p>Submit a <a href="https://github.com/mjibson/goread/issues">GitHub issue</a></p>
+        <p>Tweet me <a href="https://twitter.com/vintem12">@vintem12</a></p>
+        <p>Email me at <a href="mailto:vintem@gmail.com">vintem@gmail.com</a></p>
+        <p>Submit a <a href="https://github.com/vintem/goreader/issues">GitHub issue</a></p>
       </div>
     </div>
   <% if (user) { %>
@@ -404,9 +414,9 @@
           </div>
           <div ng-show="f.outline">
             <div class="hand folder-title" ng-show="f.outline">
-              <i class="icon-folder-open hand" ng-hide="opts.folderClose[f.Title]" ng-click="opts.folderClose[f.title] = true; saveOpts()"></i>
-              <i class="icon-folder-close hand" ng-show="opts.folderClose[f.Title]" ng-click="opts.folderClose[f.title] = false; saveOpts()"></i>
-              <span ng-class="{bold: unread['folders'][f.title]}" ng-bind="f.Title" ng-click="setActiveFolder(f.title)"></span>
+              <i class="icon-folder-open hand" ng-hide="opts.folderClose[f.title]" ng-click="opts.folderClose[f.title] = true; saveOpts()"></i>
+              <i class="icon-folder-close hand" ng-show="opts.folderClose[f.title]" ng-click="opts.folderClose[f.title] = false; saveOpts()"></i>
+              <span ng-class="{bold: unread['folders'][f.title]}" ng-bind="f.title" ng-click="setActiveFolder(f.title)"></span>
 								<span ng-show="unread['folders'][f.title]">
 									{{unread['folders'][f.title]}}
 								</span>
@@ -477,12 +487,12 @@
         <div class="story-header hand" ng-class="{read: s.read}">
           <div class="story-feed muted visible-desktop" ng-click="setCurrent($index, false, true)" ng-bind="s.feed.title"></div>
           <div class="story-title" ng-click="setCurrent($index, false, true)">
-            <div class="" stop-event="click" ng-click="setStarred($index)" starred></div>
+            <div class="" stop-event="click" ng-click="setStarred($index)" starred="s.starred"></div>
             <strong ng-bind="s.title"></strong>
             <span class="story-summary muted" ng-show="s.summary" ng-bind="'- ' + s.summary"></span>
           </div>
           <div class="story-date muted visible-desktop">
-            <span ng-bind="s.publishedDate | date:'medium'" ng-click="setCurrent($index, false, true)"></span>
+            <span ng-bind="s.publishedDate | date:'short'" ng-click="setCurrent($index, false, true)"></span>
             <a ng-href="{{s.link}}" target="_blank"><i class="icon-share-alt"></i></a>
           </div>
         </div>
@@ -494,6 +504,48 @@
           </small></p>
           <div ng-bind-html-unsafe="contents[s.guid]" class="clearfix"></div>
         </div>
+          <div class="story-footer" ng-show="$index == currentStory || opts.expanded">
+              <ul class="inline">
+                  <!--
+                  <li style="vertical-align: middle">
+                      <a target="_blank" ng-href="mailto:?subject={{s.title | encodeURI}}&body={{s.Link | encodeURI}}">
+                          <i class="icon-envelope"></i>
+                          email
+                      </a>
+                  </li>
+                  <li style="vertical-align: middle">
+                      <a target="_blank" ng-href="https://twitter.com/intent/tweet?text={{s.title | encodeURI}}&url={{s.link | encodeURI}}}&via=GoReaderRss">
+                          <i class="icon-twitter"></i>
+                          tweet
+                      </a>
+                  </li>
+                  <li style="vertical-align: middle">
+                      <a target="_blank" ng-href="https://plus.google.com/share?url={{s.link | encodeURI}}">
+                          <i class="icon-google-plus"></i>
+                          google
+                      </a>
+                  </li>
+                  <li style="vertical-align: middle">
+                      <a target="_blank" ng-href="http://www.tumblr.com/share/link?url={{s.link | encodeURI}}&name={{s.title | encodeURI}}">
+                          <i class="icon-tumblr"></i>
+                          tumblr
+                      </a>
+                  </li>
+                  <li style="vertical-align: middle">
+                      <a target="_blank" ng-href="http://www.instapaper.com/hello2?url={{s.link | encodeURI}}&title={{s.title | encodeURI}}">
+                          save to Instapaper
+                      </a>
+                  </li>-->
+                  <li>
+                      <form class="form-inline">
+                          <label class="checkbox" ng-click="$event.stopPropagation()">
+                              <input type="checkbox" ng-model="s.unread" ng-change="markUnread(s._id)">
+                              keep unread
+                          </label>
+                      </form>
+                  </li>
+              </ul>
+          </div>
       </div>
       <div ng-show="loading == 0 && shown == 'feeds' && numfeeds && dispStories.length == 0" class="top-margin">
         <div class="offset2 span8">

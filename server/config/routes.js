@@ -15,6 +15,8 @@ module.exports = function(app) {
   app.post('/add-subscription', authentication.verifyUserAuthenticated, subscriptions.create);
 
   app.post('/item/mark-read', authentication.verifyUserAuthenticated, items.markAsRead);
+  app.post('/item/mark-unread', authentication.verifyUserAuthenticated, items.markAsUnread);
+  app.post('/item/mark-starred', authentication.verifyUserAuthenticated, items.markStarred);
   app.post('/user/get-contents', function(req, res){res.send('')}); // change this
 
   app.post('/import-opml', authentication.verifyUserAuthenticated, feedImport.importOmpl);
