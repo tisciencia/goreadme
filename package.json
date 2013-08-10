@@ -13,7 +13,7 @@
     "mongoose": "~3.6.15",
     "underscore": "~1.5.1",
     "request": "~2.25.0",
-    "bower": "0.6.x"
+    "bower": "1.0.x"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
