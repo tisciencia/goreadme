@@ -4,4 +4,4 @@ dist
 .sass-cache
 app/components
 .idea
-server/config/google-settings.js
+server/config/google-settings-local.js
