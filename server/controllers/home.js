@@ -5,6 +5,8 @@ exports.index = function(req, res){
     user: req.user,
     admin: false,
     googleAnalyticsId: statistics.GOOGLE_ANALYTICS_ID,
-    googleAnalyticsHost: statistics.GOOGLE_ANALYTICS_HOST
+    googleAnalyticsHost: statistics.GOOGLE_ANALYTICS_HOST,
+    statcounterProject: statistics.STATCOUNTER_PROJECT,
+    statcounterSecurity: statistics.STATCOUNTER_SECURITY
   });
 };

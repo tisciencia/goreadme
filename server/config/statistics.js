@@ -1,2 +1,5 @@
 exports.GOOGLE_ANALYTICS_ID = process.env.GOOGLE_ANALYTICS_ID || "";
 exports.GOOGLE_ANALYTICS_HOST = process.env.GOOGLE_ANALYTICS_HOST || "";
+
+exports.STATCOUNTER_PROJECT = process.env.STATCOUNTER_PROJECT || "0";
+exports.STATCOUNTER_SECURITY = process.env.STATCOUNTER_SECURITY || "";
