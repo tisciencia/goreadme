@@ -13,9 +13,9 @@ function countProperties(obj) {
   return count;
 }
 
-var goReaderAppModule = angular.module('goReaderApp', ['ui.sortable']);
+var goReadMeAppModule = angular.module('goReadMeApp', ['ui.sortable']);
 
-goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $window) {
+goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $window) {
 
   $scope.accessToken = "";
   $scope.admin = false;
@@ -273,7 +273,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
     }
 
     $scope.updateUnread();
-    $scope.updateStories();
+    //$scope.updateStories();
     $scope.updateTitle();
 
     console.log($('#mark-all-read').attr('data-url'));
@@ -412,10 +412,12 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
   };
 
   $scope.updateStories = function() {
+    var stories = $scope.stories
+      , i;
     $scope.dispStories = [];
     if ($scope.activeFolder) {
-      for (var i = 0; i < $scope.stories.length; i++) {
-        var s = $scope.stories[i];
+      for (i = 0; i < stories.length; i++) {
+        var s = stories[i];
         if ($scope.xmlurls[s.feed.xmlurl].folder == $scope.activeFolder) {
           $scope.dispStories.push(s);
         }
@@ -429,15 +431,19 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
           $scope.dispStories.push(s);
         });
       } else {
-        for (var i = 0; i < $scope.stories.length; i++) {
+        for (i = 0; i < stories.length; i++) {
           var s = $scope.stories[i];
-          if (s.feed.xmlurl == $scope.activeFeed) {
+          if (s.feed.xmlurl === $scope.activeFeed) {
             $scope.dispStories.push(s);
           }
         }
       }
     } else {
-      $scope.dispStories = $scope.stories;
+      for (i = 0; i < stories.length; i++) {
+        if(!stories[i].read) {
+          $scope.dispStories.push(stories[i]);
+        }
+      }
     }
 
     var swap = $scope.opts.sort == 'oldest'
@@ -746,7 +752,7 @@ goReaderAppModule.controller('GoreaderCtrl', function($scope, $http, $timeout, $
 
 });
 
-goReaderAppModule.directive('stopEvent', function() {
+goReadMeAppModule.directive('stopEvent', function() {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="goReaderApp">
+<html lang="en" ng-app="goReadMeApp">
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>go reader</title>
+  <title>go-reade me</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -242,7 +242,7 @@
     }
   </style>
 </head>
-<body ng-controller="GoreaderCtrl" class="ng-cloak">
+<body ng-controller="goReadMeCtrl" class="ng-cloak">
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -251,7 +251,7 @@
         <span class="icon-bar"></span>
       </button>
       <div class="container-fluid">
-        <a class="brand" href="/">go reader</a>
+        <a class="brand" href="/">go-read me</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li ng-class="{active: shown == 'about'}"><a href="#" ng-click="shown = 'about'">about</a></li>
@@ -332,7 +332,6 @@
                 <li><a href="#" ng-click="setAddSubscription()">add subscription</a></li>
                 <li><a href="#" ng-click="shown = 'import-opml'">import opml</a></li>
                 <li class="divider"></li>
-                <li><a href="https://go-read.appspot.com/">goread over HTTPS</a></li>
                 <li><a href="/export-opml">export opml</a></li>
                 <li><a href="/logout">logout</a></li>
                 <li class="divider" ng-show="isDev"></li>
@@ -366,30 +365,23 @@
         <p>
           Built by <a href="http://en.templecoding.com">Thiago Temple</a>.
           Powered by <a href="http://nodejs.org/">Node.js</a> and <a href="http://angularjs.org/">AngularJS</a>.
-          Code on <a href="https://github.com/vintem/goreader">GitHub</a>.
+          Code on <a href="https://github.com/vintem/goreadme">GitHub</a>.
         </p>
         <h1>FAQ</h1>
         <p>
           <strong>Are there keyboard shortcuts?</strong>
           Yes, press <button class="btn">?</button>.
         </p>
-        <p>
-          <strong>What is on your todo list?</strong>
-          <ul>
-            <li>google reader API compatibility (so other reader clients can use go read as a backend)</li>
-            <li>pubsubhubub support</li>
-          </ul>
-        </p>
-        <p>
-          <strong>How will you pay for this?</strong>
-          Free version will be ad supported with hopefully non-annoying ads. Free version is not limited in any way.
-          Or pay a reasonable monthly or yearly fee to remove them. If you don't like either of those options, download the code and upload it to your own app engine instance. Free quota supports up to a few hundred feeds.
-        </p>
+        <!--<p>-->
+          <!--<strong>How will you pay for this?</strong>-->
+          <!--Free version will be ad supported with hopefully non-annoying ads. Free version is not limited in any way.-->
+          <!--Or pay a reasonable monthly or yearly fee to remove them. If you don't like either of those options, download the code and upload it to your own app engine instance. Free quota supports up to a few hundred feeds.-->
+        <!--</p>-->
         <h1>Help</h1>
         <p>Problems? Try one of these:</p>
         <p>Tweet me <a href="https://twitter.com/vintem12">@vintem12</a></p>
         <p>Email me at <a href="mailto:vintem@gmail.com">vintem@gmail.com</a></p>
-        <p>Submit a <a href="https://github.com/vintem/goreader/issues">GitHub issue</a></p>
+        <p>Submit a <a href="https://github.com/vintem/goreadme/issues">GitHub issue</a></p>
       </div>
     </div>
   <% if (user) { %>
@@ -593,7 +585,7 @@
     <div class="offset1 span10">
       <div class="hero-unit">
         <h1>Hi, RSS user</h1>
-        <p>Go Read is a web-based RSS reader.</p>
+        <p>go-read me is a web-based RSS reader.</p>
         <p>It is designed to be as useful as Google Reader.</p>
         <p>
           <!--<a class="btn btn-primary btn-large" href="#/login/google">sign up / log in with google</a>-->
