@@ -494,32 +494,31 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     if (!confirm('Delete ' + folder + ' and unsubscribe from all feeds in it?')) return;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline && f.title == folder) {
+      if (f.outline && f.title == folder) {
         $scope.feeds.splice(i, 1);
         break;
       }
     }
     $scope.setActiveFeed();
-    $scope.uploadOpml();
   };
 
   $scope.unsubscribe = function(feed) {
     if (!confirm('Unsubscribe from ' + $scope.xmlurls[feed].title + '?')) return;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline) {
-        for (var j = 0; j < f.Outline.length; j++) {
-          if (f.Outline[j].XmlUrl == feed) {
-            f.Outline.splice(j, 1);
+      if (f.outline) {
+        for (var j = 0; j < f.outline.length; j++) {
+          if (f.outline[j].XmlUrl == feed) {
+            f.outline.splice(j, 1);
             break;
           }
         }
-        if (!f.Outline.length) {
+        if (!f.outline.length) {
           $scope.feeds.splice(i, 1);
           break;
         }
       }
-      if (f.XmlUrl == feed) {
+      if (f.xmlurl == feed) {
         $scope.feeds.splice(i, 1);
         break;
       }
@@ -527,8 +526,10 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     $scope.stories = $scope.stories.filter(function(e) {
       return e.feed.XmlUrl != feed;
     });
+    $http.post('/subscriptions/unsubscribe', { subscription: feed}).success(function(){
+
+    });
     $scope.setActiveFeed();
-    $scope.uploadOpml();
     $scope.updateUnread();
   };
 

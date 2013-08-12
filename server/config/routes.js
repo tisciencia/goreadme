@@ -13,6 +13,7 @@ module.exports = function(app) {
 
   app.get('/list-feeds', authentication.verifyUserAuthenticated, subscriptions.listFeeds);
   app.post('/add-subscription', authentication.verifyUserAuthenticated, subscriptions.create);
+  app.post('/subscriptions/unsubscribe', authentication.verifyUserAuthenticated, subscriptions.delete);
 
   app.post('/item/mark-read', authentication.verifyUserAuthenticated, items.markAsRead);
   app.post('/item/mark-unread', authentication.verifyUserAuthenticated, items.markAsUnread);

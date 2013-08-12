@@ -58,10 +58,27 @@ var feed = function() {
     });
   };
 
+  var _remove = function(model, success, fail) {
+    _findBy(model, function(subscription) {
+      if(subscription) {
+        subscription.remove(function(error) {
+          if(error && fail && typeof(fail) === 'funciton') {
+            fail();
+          } else {
+            if(success && typeof(success) === 'function') {
+              success();
+            }
+          }
+        })
+      }
+    })
+  }
+
   return {
     Model: _model,
     create: _create,
     findBy: _findBy,
+    remove: _remove,
     findAllBy: _findAllBy
   }
 }();

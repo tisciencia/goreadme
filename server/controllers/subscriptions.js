@@ -83,6 +83,13 @@ exports.create = function(req, res) {
   res.send('');
 }
 
+exports.delete = function(req, res) {
+  user.findBy({ email: req.session.passport.user._json.email }, function(currentUser) {
+    feed.remove( { user: currentUser._id, xmlurl: req.body.subscription });
+  });
+  res.send('');
+}
+
 
 function queryFeedUrl(feedUrl, callback) {
   var apiUrl = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%3D'";
