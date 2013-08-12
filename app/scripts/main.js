@@ -30,7 +30,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     hideEmpty: false
   };
 
-  $scope.sortableOptions = {
+  $scope.sortableoptions = {
     stop: function() {
       $scope.uploadOpml();
     }
@@ -100,14 +100,14 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     delete $scope.currentStory;
     $http.get($('#refresh').attr('data-url-feeds'))
       .success(function(data) {
-        $scope.feeds = data || [];
+        $scope.feeds = data.subscriptions || [];
         $scope.numfeeds = 0;
         $scope.stories = [];
         $scope.unreadStories = {};
         $scope.last = 0;
         $scope.xmlurls = {};
         $scope.icons = data.Icons;
-        $scope.opts = data.Options ? JSON.parse(data.Options) : $scope.opts;
+        $scope.opts = data.options ? JSON.parse(data.options) : $scope.opts;
 
         var loadStories = function(feed) {
           $scope.numfeeds++;
@@ -538,44 +538,45 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
   $scope.moveFeed = function(url, folder) {
     var feed;
     var found = false;
-    for (var i = 0; i < $scope.feeds.length; i++) {
-      var f = $scope.feeds[i];
-      if (f.outline) {
-        for (var j = 0; j < f.outline.length; j++) {
-          var o = f.outline[j];
-          if (o.xmlurl == url) {
-            feed = f.outline[j];
-            f.outline.splice(j, 1);
-            if (!f.outline.length)
-              $scope.feeds.splice(i, 1);
-            break;
-          }
-        }
-        if (f.title == folder)
-          found = true;
-      } else if (f.xmlurl == url) {
-        feed = f;
-        $scope.feeds.splice(i, 1)
-      }
-    }
-    if (!feed) return;
-    if (!folder) {
-      $scope.feeds.push(feed);
-    } else {
-      if (!found) {
-        $scope.feeds.push({
-          outline: [],
-          title: folder
-        });
-      }
+    $http.post('/subscriptions/move-to-folder', { subscription: url, folder: folder }).success(function() {
       for (var i = 0; i < $scope.feeds.length; i++) {
         var f = $scope.feeds[i];
-        if (f.outline && f.title == folder) {
-          $scope.feeds[i].outline.push(feed);
+        if (f.outline) {
+          for (var j = 0; j < f.outline.length; j++) {
+            var o = f.outline[j];
+            if (o.xmlurl == url) {
+              feed = f.outline[j];
+              f.outline.splice(j, 1);
+              if (!f.outline.length)
+                $scope.feeds.splice(i, 1);
+              break;
+            }
+          }
+          if (f.title == folder)
+            found = true;
+        } else if (f.xmlurl == url) {
+          feed = f;
+          $scope.feeds.splice(i, 1)
         }
       }
-    }
-    $scope.uploadOpml();
+      if (!feed) return;
+      if (!folder) {
+        $scope.feeds.push(feed);
+      } else {
+        if (!found) {
+          $scope.feeds.push({
+            outline: [],
+            title: folder
+          });
+        }
+        for (var i = 0; i < $scope.feeds.length; i++) {
+          var f = $scope.feeds[i];
+          if (f.outline && f.title == folder) {
+            $scope.feeds[i].outline.push(feed);
+          }
+        }
+      }
+    });
   };
 
   $scope.moveFeedNew = function(url) {

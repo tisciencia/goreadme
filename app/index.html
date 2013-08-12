@@ -397,7 +397,7 @@
       </ul>
       <ul class="unstyled" ui-sortable="sortableOptions" ng-model="feeds">
         <li ng-repeat="f in feeds" ng-hide="shouldHideEmpty(f)">
-          <div class="hand feed-title" ng-hide="f.Outline" ng-click="setActiveFeed(f.xmlurl)">
+          <div class="hand feed-title" ng-hide="f.outline" ng-click="setActiveFeed(f.xmlurl)">
             <img ng-src="{{icons[f.xmlurl] || '/images/feed.png'}}" class="feed-icon">
             <span ng-class="{bold: unread['feeds'][f.xmlurl]}" ng-bind="f.title"></span>
 							<span ng-show="unread['feeds'][f.xmlurl]">
@@ -429,7 +429,7 @@
       </ul>
     </div>
 
-    <div ng-show="loading == 0 && shown == 'feeds' && numfeeds" ng-class="navspan()" ng-style="navmargin()" id="story-list" data-url-upload="/upload-opml" data-url-options="/save-options" data-url-get-feed="/get-feed">
+    <div ng-show="loading == 0 && shown == 'feeds' && numfeeds" ng-class="navspan()" ng-style="navmargin()" id="story-list" data-url-upload="/upload-opml" data-url-options="/options/save" data-url-get-feed="/get-feed">
       <div class="active-name story">
         <span ng-hide="activeFeed || activeFolder" ng-bind="active()"></span>
         <div ng-show="activeFolder">

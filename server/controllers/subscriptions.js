@@ -1,31 +1,63 @@
 var request = require('request')
   , feed = require('../models/feed')
   , user = require('../models/user')
+  , option = require('../models/option')
   , feedItem = require('../models/feedItem')
   , _ = require('underscore')
   , async = require('async');
 
 exports.listFeeds = function(req, res) {
-  var subscriptions = {};
-  user.findBy({ email: req.session.passport.user._json.email }, function(currentUser) {
-    feed.findAllBy({ user: currentUser._id }, function(subscriptionsFromUser) {
+  var subscriptions = []
+    , userEmail = req.session.passport.user._json.email
+    , currentUser;
 
-      if(subscriptionsFromUser && subscriptionsFromUser.length > 0) {
+  async.series([
+    function (callback) {
+      user.findBy({ email: userEmail }, function(cUser) {
+        currentUser = cUser;
+        callback(null);
+      });
+    },
+    function(callback) {
+      var userOptions = "";
+      option.findBy({ user: currentUser._id }, function(options) {
+        if(options) {
+          userOptions = options.userOptions;
+        }
+        callback(null, userOptions);
+      })
+    },
+    function(callback) {
+      feed.findAllBy({ user: currentUser._id }, function(subscriptionsFromUser) {
+        if(subscriptionsFromUser && subscriptionsFromUser.length > 0) {
+          subscriptionsFromUser.forEach(addItemsToSubscription);
+          subscriptionsFromUser.forEach(function(subscription) {
+            if(subscription.folder) {
+              var folder = _.find(subscriptions, function(s) {return s.outline && s.title === subscription.folder});
+              if(folder) {
+                folder.outline.push(convertToSimpleSubscription(subscription));
+              } else {
+                subscriptions.push({
+                  outline: [convertToSimpleSubscription(subscription)],
+                  title: subscription.folder
+                });
+              }
+            } else {
+              subscriptions.push(convertToSimpleSubscription(subscription));
+            }
+          });
+        }
+        callback(null, subscriptions);
+      });
+    }
+  ], function(error, results){
+    if(error) {
+      console.log(error);
+    }
 
-        subscriptionsFromUser.forEach(addItemsToSubscription);
+    console.log(results.length);
 
-        subscriptions = _.map(subscriptionsFromUser, function(subscription) {
-          return {
-            title: subscription.title,
-            xmlurl: subscription.xmlurl,
-            htmlurl: subscription.htmlurl,
-            items: subscription.items,
-            itemsCount: subscription.items.length
-          }
-        });
-      }
-      res.json(subscriptions);
-    });
+    res.json({ options: results[1], subscriptions: results[2] });
   });
 };
 
@@ -100,6 +132,51 @@ exports.delete = function(req, res) {
     feed.remove( { user: currentUser._id, xmlurl: req.body.subscription });
   });
   res.send('');
+}
+
+exports.moveToFolder = function(req, res) {
+  var body = req.body
+    , xmlUrl = body.subscription
+    , toFolder = body.folder
+    , userEmail = req.session.passport.user._json.email
+    , currentUser;
+
+  async.series([
+    function(callback) {
+      user.findBy({email: userEmail}, function(cUser) {
+        currentUser = cUser;
+        callback(null);
+      });
+    },
+    function(callback) {
+
+      feed.findBy({xmlurl: xmlUrl, user: currentUser._id}, function(subscription) {
+        if(subscription) {
+          subscription.folder = toFolder;
+          subscription.save(function() {
+            callback(null);
+          })
+        }
+      });
+
+      callback(null);
+    }
+  ], function(error, results) {
+    if(error) {
+      console.log(error);
+    }
+    res.send('');
+  });
+}
+
+function convertToSimpleSubscription(subscription) {
+  return {
+    title: subscription.title,
+    xmlurl: subscription.xmlurl,
+    htmlurl: subscription.htmlurl,
+    items: subscription.items,
+    itemsCount: subscription.items.length
+  }
 }
 
 

@@ -62,7 +62,7 @@ var feed = function() {
     _findBy(model, function(subscription) {
       if(subscription) {
         subscription.remove(function(error) {
-          if(error && fail && typeof(fail) === 'funciton') {
+          if(error && fail && typeof(fail) === 'function') {
             fail();
           } else {
             if(success && typeof(success) === 'function') {
