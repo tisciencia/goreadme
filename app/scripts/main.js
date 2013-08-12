@@ -193,7 +193,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
 
   $scope.shouldHideEmpty = function(f) {
     if (!$scope.opts.hideEmpty) return false;
-    var cnt = f.Outline ? $scope.unread['folders'][f.title] : $scope.unread['feeds'][f.xmlurl];
+    var cnt = f.outline ? $scope.unread['folders'][f.title] : $scope.unread['feeds'][f.xmlurl];
     return cnt == 0;
   };
 
@@ -481,7 +481,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     if (!name) return;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline && f.title == folder) {
+      if (f.outline && f.title == folder) {
         f.title = name;
         $scope.activeFolder = name;
         break;
@@ -508,7 +508,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
       var f = $scope.feeds[i];
       if (f.outline) {
         for (var j = 0; j < f.outline.length; j++) {
-          if (f.outline[j].XmlUrl == feed) {
+          if (f.outline[j].xmlrul == feed) {
             f.outline.splice(j, 1);
             break;
           }
@@ -520,16 +520,18 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
       }
       if (f.xmlurl == feed) {
         $scope.feeds.splice(i, 1);
+        $scope.numfeeds--;
         break;
       }
     }
     $scope.stories = $scope.stories.filter(function(e) {
-      return e.feed.XmlUrl != feed;
+      return e.feed.xmlurl != feed;
     });
     $http.post('/subscriptions/unsubscribe', { subscription: feed}).success(function(){
 
     });
     $scope.setActiveFeed();
+    $scope.updateStories();
     $scope.updateUnread();
   };
 
@@ -538,20 +540,20 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     var found = false;
     for (var i = 0; i < $scope.feeds.length; i++) {
       var f = $scope.feeds[i];
-      if (f.Outline) {
-        for (var j = 0; j < f.Outline.length; j++) {
-          var o = f.Outline[j];
-          if (o.XmlUrl == url) {
-            feed = f.Outline[j];
-            f.Outline.splice(j, 1);
-            if (!f.Outline.length)
+      if (f.outline) {
+        for (var j = 0; j < f.outline.length; j++) {
+          var o = f.outline[j];
+          if (o.xmlurl == url) {
+            feed = f.outline[j];
+            f.outline.splice(j, 1);
+            if (!f.outline.length)
               $scope.feeds.splice(i, 1);
             break;
           }
         }
         if (f.title == folder)
           found = true;
-      } else if (f.XmlUrl == url) {
+      } else if (f.xmlurl == url) {
         feed = f;
         $scope.feeds.splice(i, 1)
       }
@@ -562,14 +564,14 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     } else {
       if (!found) {
         $scope.feeds.push({
-          Outline: [],
+          outline: [],
           title: folder
         });
       }
       for (var i = 0; i < $scope.feeds.length; i++) {
         var f = $scope.feeds[i];
-        if (f.Outline && f.title == folder) {
-          $scope.feeds[i].Outline.push(feed);
+        if (f.outline && f.title == folder) {
+          $scope.feeds[i].outline.push(feed);
         }
       }
     }
