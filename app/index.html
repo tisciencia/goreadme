@@ -714,6 +714,7 @@
   </script>
 
   <!-- Start of StatCounter Code for Default Guide -->
+  <% if(statcounterProject !== "0" && statcounterSecurity) { %>
   <script type="text/javascript">
       var sc_project=<%= statcounterProject%>;
       var sc_invisible=1;
@@ -727,6 +728,7 @@
                                         href="http://statcounter.com/" target="_blank"><img class="statcounter"
                                                                                             src="http://c.statcounter.com/<%= statcounterProject%>/0/<%= statcounterSecurity%>/1/" alt="web
 analytics"></a></div></noscript>
+  <% } %>
   <!-- End of StatCounter Code for Default Guide -->
 
   <!-- build:js scripts/main.js -->

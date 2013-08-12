@@ -2,7 +2,8 @@ var request = require('request')
   , feed = require('../models/feed')
   , user = require('../models/user')
   , feedItem = require('../models/feedItem')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , async = require('async');
 
 exports.listFeeds = function(req, res) {
   var subscriptions = {};
@@ -29,58 +30,69 @@ exports.listFeeds = function(req, res) {
 };
 
 exports.create = function(req, res) {
-  var feedUrl = req.body.url;
+  var feedUrl = req.body.url
+    , apiUrl;
 
-  var apiUrl = queryFeedUrl(feedUrl);
+  async.series([
+    function(callback) {
+      apiUrl = queryFeedUrl(feedUrl);
+      callback(null, apiUrl)
+    },
+    function(callback) {
+      function processFeed(queryResults) {
+        var newSubscription = new feed.Model()
+          , channel;
 
-  function processFeed(queryResults) {
-    var newSubscription = new feed.Model()
-      , channel;
-
-    user.findBy({ email: req.session.passport.user._json.email }, function(currentUser) {
-      newSubscription.user = currentUser._id;
-      if(queryResults.query.results.rss) {
-        channel = queryResults.query.results.rss.channel;
-        feed.findBy({ htmlurl: channel.link[0] }, function(currentFeed) {
-          if (!currentFeed) {
-            newSubscription.title = channel.title;
-            newSubscription.description = channel.description;
-            newSubscription.language = channel.language;
-            newSubscription.htmlurl = channel.link[0];
-            newSubscription.xmlurl = channel.link[1].href || req.body.url;
-            newSubscription.updated = channel.lastBuildDate;
-            newSubscription.type = 'rss';
-            newSubscription.save();
-            addItemsToSubscription(newSubscription, queryResults);
-          }
-        });
-      } else {
-        channel = queryResults.query.results.feed;
-        feed.findBy({ htmlurl: channel.id }, function(currentFeed) {
-          if (!currentFeed) {
-            newSubscription.title = channel.title;
-            newSubscription.language = channel.language;
-            newSubscription.htmlurl = channel.id;
-            newSubscription.xmlurl = channel.link[0].href || req.body.url;
-            newSubscription.updated = channel.updated;
-            newSubscription.type = 'atom';
-            newSubscription.save();
-            addItemsToSubscription(newSubscription, queryResults);
+        user.findBy({ email: req.session.passport.user._json.email }, function(currentUser) {
+          newSubscription.user = currentUser._id;
+          if(queryResults.query.results.rss) {
+            channel = queryResults.query.results.rss.channel;
+            feed.findBy({ htmlurl: channel.link[0] }, function(currentFeed) {
+              if (!currentFeed) {
+                newSubscription.title = channel.title;
+                newSubscription.description = channel.description;
+                newSubscription.language = channel.language;
+                newSubscription.htmlurl = channel.link[0];
+                newSubscription.xmlurl = channel.link[1].href || req.body.url;
+                newSubscription.updated = channel.lastBuildDate;
+                newSubscription.type = 'rss';
+                newSubscription.save(function() {
+                  addItemsToSubscription(newSubscription, queryResults);
+                  callback(null, '');
+                });
+              }
+            });
+          } else {
+            channel = queryResults.query.results.feed;
+            feed.findBy({ htmlurl: channel.id }, function(currentFeed) {
+              if (!currentFeed) {
+                newSubscription.title = channel.title;
+                newSubscription.language = channel.language;
+                newSubscription.htmlurl = channel.id;
+                newSubscription.xmlurl = channel.link[0].href || req.body.url;
+                newSubscription.updated = channel.updated;
+                newSubscription.type = 'atom';
+                newSubscription.save(function() {
+                  addItemsToSubscription(newSubscription, queryResults);
+                  callback(null, '');
+                });
+              }
+            });
           }
         });
       }
-    });
-  }
 
-  request(apiUrl, function(error, response, body) {
-    if(error) {
-      console.log('error: ' + error);
+      request(apiUrl, function(error, response, body) {
+        if(error) {
+          console.log('error: ' + error);
+        }
+        eval(body);
+      });
+    },
+    function (callback) {
+      res.redirect('/list-feeds');
     }
-
-    eval(body);
-  });
-
-  res.send('');
+  ]);
 }
 
 exports.delete = function(req, res) {
