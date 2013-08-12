@@ -76,7 +76,8 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
         }, 250);
       }, function(data) {
         if (data.data) {
-          alert(data.data);
+          console.log(data.data);
+          toastr.error(data.data, 'Oops!');
         }
         $scope.loading--;
       });

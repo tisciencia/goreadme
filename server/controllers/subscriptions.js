@@ -56,9 +56,6 @@ exports.listFeeds = function(req, res) {
     if(error) {
       console.log(error);
     }
-
-    console.log(results.length);
-
     res.json({ options: results[1], subscriptions: results[2] });
   });
 };
@@ -76,6 +73,11 @@ exports.create = function(req, res) {
       function processFeed(queryResults) {
         var newSubscription = new feed.Model()
           , channel;
+
+        if(!queryResults.query.results) {
+          res.send(500, 'The url informed is not a valid feed url');
+          return;
+        }
 
         user.findBy({ email: req.session.passport.user._json.email }, function(currentUser) {
           newSubscription.user = currentUser._id;
