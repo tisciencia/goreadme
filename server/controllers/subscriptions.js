@@ -30,7 +30,9 @@ exports.listFeeds = function(req, res) {
     function(callback) {
       feed.findAllBy({ user: currentUser._id }, function(subscriptionsFromUser) {
         if(subscriptionsFromUser && subscriptionsFromUser.length > 0) {
+
           subscriptionsFromUser.forEach(addItemsToSubscription);
+
           subscriptionsFromUser.forEach(function(subscription) {
             if(subscription.folder) {
               var folder = _.find(subscriptions, function(s) {return s.outline && s.title === subscription.folder});
@@ -85,7 +87,7 @@ exports.create = function(req, res) {
                 newSubscription.description = channel.description;
                 newSubscription.language = channel.language;
                 newSubscription.htmlurl = channel.link[0];
-                newSubscription.xmlurl = channel.link[1].href || req.body.url;
+                newSubscription.xmlurl = req.body.url;
                 newSubscription.updated = channel.lastBuildDate;
                 newSubscription.type = 'rss';
                 newSubscription.save(function() {
@@ -101,7 +103,7 @@ exports.create = function(req, res) {
                 newSubscription.title = channel.title;
                 newSubscription.language = channel.language;
                 newSubscription.htmlurl = channel.id;
-                newSubscription.xmlurl = channel.link[0].href || req.body.url;
+                newSubscription.xmlurl = req.body.url;
                 newSubscription.updated = channel.updated;
                 newSubscription.type = 'atom';
                 newSubscription.save(function() {
@@ -226,6 +228,7 @@ function addItemsToSubscription (subscription, queryResults) {
       });
     }
   }
+
   if(!isNaN(queryResults)) {
     var apiUrl = queryFeedUrl(subscription.xmlurl, "updateSubscription");
     request(apiUrl, function(error, response, body) {
