@@ -88,6 +88,8 @@ exports.create = function(req, res) {
               htmlUrl = channel.link;
             } else if (channel.link[0].href) {
               htmlUrl = channel.link[0].href;
+            } else if (typeof(channel.link[0]) === 'string') {
+              htmlUrl = channel.link[0];
             }
 
             feed.findBy({ user: currentUser._id, htmlurl: htmlUrl }, function(currentFeed) {
