@@ -280,8 +280,6 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     //$scope.updateStories();
     $scope.updateTitle();
 
-    console.log($('#mark-all-read').attr('data-url'));
-
     if (!unread)
       $scope.http('POST', $('#mark-all-read').attr('data-url'), { last: $scope.last });
   };
