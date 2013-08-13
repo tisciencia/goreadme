@@ -395,6 +395,10 @@
         <li class="all-subs hand" ng-click="setActiveFeed()">
           all items ({{unread.all || 0}})
         </li>
+        <li class="all-subs hand" ng-click="setActiveFolder('favorites')" ng-show="favorites.length > 0">
+          <i class="icon-star hand"></i>
+          favorites ({{favorites.length || 0}})
+        </li>
       </ul>
       <ul class="unstyled" ui-sortable="sortableOptions" ng-model="feeds">
         <li ng-repeat="f in feeds" ng-hide="shouldHideEmpty(f)">

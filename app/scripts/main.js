@@ -107,6 +107,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
         }
         $scope.numfeeds = 0;
         $scope.stories = [];
+        $scope.favorites = [];
         $scope.unreadStories = {};
         $scope.last = 0;
         $scope.xmlurls = {};
@@ -123,6 +124,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
               $scope.last = stories[i].Date;
             }
             $scope.stories.push(stories[i]);
+            if(stories[i].starred) $scope.favorites.push(stories[i]);
             $scope.unreadStories[stories[i].guid] = !stories[i].read;
           }
         };
@@ -418,6 +420,10 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
       , i;
     $scope.dispStories = [];
     if ($scope.activeFolder) {
+      if($scope.activeFolder === 'favorites') {
+        $scope.dispStories = $scope.favorites;
+        return;
+      }
       for (i = 0; i < stories.length; i++) {
         var s = stories[i];
         if ($scope.xmlurls[s.feed.xmlurl].folder == $scope.activeFolder) {
@@ -718,15 +724,24 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
   };
 
   $scope.setStarred = function(i) {
-    var story = $scope.dispStories[i],
+    var shownStory = $scope.dispStories[i],
       stories = $scope.stories,
-      l = stories.length;
-    for(var i = 0; i < l; i++) {
-      if(stories[i]._id == story._id) {
-        $scope.stories[i].starred = !stories[i].starred;
+      favorites = $scope.favorites;
+
+    var story = _.find(stories, function(s) {return s._id === shownStory._id});
+    story.starred = !story.starred;
+    if(story.starred) {
+      favorites.push(story);
+    } else {
+      for (var i = 0, l = favorites.length; i < l; i++) {
+        if(favorites[i]._id === shownStory._id){
+          favorites.splice(i, 1);
+          break;
+        }
       }
     }
-    $scope.http('POST', '/item/mark-starred', {storyId: story._id, starred: story.starred});
+
+    $scope.http('POST', '/item/mark-starred', {storyId: shownStory._id, starred: shownStory.starred});
     $scope.updateStories();
   };
 
