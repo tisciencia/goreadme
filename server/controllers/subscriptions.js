@@ -102,7 +102,11 @@ exports.create = function(req, res) {
             channel = queryResults.query.results.feed;
             feed.findBy({ htmlurl: channel.id }, function(currentFeed) {
               if (!currentFeed) {
-                newSubscription.title = channel.title;
+                if(typeof(channel.title) === 'string') {
+                  newSubscription.title = channel.title;
+                } else if (channel.title.content) {
+                  newSubscription.title = channel.title.content;
+                }
                 newSubscription.language = channel.language;
                 newSubscription.htmlurl = channel.id;
                 newSubscription.xmlurl = req.body.url;
