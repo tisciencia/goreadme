@@ -223,7 +223,7 @@ function addItemsToSubscription (subscription, queryResults) {
           newFeedItem.link = item.link;
           newFeedItem.title = item.title;
           newFeedItem.description = item.description;
-          newFeedItem.content = item.encoded;
+          newFeedItem.content = item.encoded || item.description;
           newFeedItem.publishedDate = item.pubDate;
           newFeedItem.author = item.creator;
           subscription.items.push(newFeedItem);
