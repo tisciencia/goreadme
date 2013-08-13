@@ -14,6 +14,7 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <!--<link rel="stylesheet" href="styles/main.css">-->
   <link href="/styles/bootstrap-2.3.2.min.css" rel="stylesheet">
+  <link href="/styles/vendor/font-awesome.min.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
   <link href="/styles/vendor/toastr.min.css" rel="stylesheet" type="text/css">
   <!-- build:js scripts/vendor/modernizr.js -->
@@ -515,24 +516,24 @@
                           <i class="icon-twitter"></i>
                           tweet
                       </a>
-                  </li>
-                  <li style="vertical-align: middle">
-                      <a target="_blank" ng-href="https://plus.google.com/share?url={{s.link | encodeURI}}">
-                          <i class="icon-google-plus"></i>
-                          google
-                      </a>
-                  </li>
-                  <li style="vertical-align: middle">
-                      <a target="_blank" ng-href="http://www.tumblr.com/share/link?url={{s.link | encodeURI}}&name={{s.title | encodeURI}}">
-                          <i class="icon-tumblr"></i>
-                          tumblr
-                      </a>
-                  </li>
-                  <li style="vertical-align: middle">
-                      <a target="_blank" ng-href="http://www.instapaper.com/hello2?url={{s.link | encodeURI}}&title={{s.title | encodeURI}}">
-                          save to Instapaper
-                      </a>
                   </li>-->
+                <li style="vertical-align: middle">
+                    <a target="_blank" ng-href="https://plus.google.com/share?url={{s.link | encodeURI}}">
+                        <i class="icon-google-plus"></i>
+                        google
+                    </a>
+                </li>
+                <!--<li style="vertical-align: middle">
+                    <a target="_blank" ng-href="http://www.tumblr.com/share/link?url={{s.link | encodeURI}}&name={{s.title | encodeURI}}">
+                        <i class="icon-tumblr"></i>
+                        tumblr
+                    </a>
+                </li>
+                <li style="vertical-align: middle">
+                    <a target="_blank" ng-href="http://www.instapaper.com/hello2?url={{s.link | encodeURI}}&title={{s.title | encodeURI}}">
+                        save to Instapaper
+                    </a>
+                </li>-->
                   <li>
                       <form class="form-inline">
                           <label class="checkbox" ng-click="$event.stopPropagation()">

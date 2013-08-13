@@ -15,6 +15,10 @@ function countProperties(obj) {
 
 var goReadMeAppModule = angular.module('goReadMeApp', ['ui.sortable']);
 
+goReadMeAppModule.filter('encodeURI', function() {
+  return encodeURIComponent;
+})
+
 goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $window) {
 
   $scope.accessToken = "";
