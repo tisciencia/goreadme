@@ -74,7 +74,7 @@ exports.create = function(req, res) {
         var newSubscription = new feed.Model()
           , channel;
 
-        if(!queryResults.query.results) {
+        if(!queryResults.query || !queryResults.query.results) {
           res.send(500, 'The url informed is not a valid feed url');
           return;
         }
@@ -218,7 +218,11 @@ function addItemsToSubscription (subscription, queryResults) {
         if(!itemExist) {
           newFeedItem = new feedItem.Model();
           newFeedItem.link = item.link.href;
-          newFeedItem.title = item.title.content;
+          if(typeof(item.title.content) === 'string') {
+            newFeedItem.title = item.title.content;
+          } else {
+            newFeedItem.title = item.title;
+          }
           newFeedItem.description = item.content.content;
           newFeedItem.content = item.content.content;
           newFeedItem.publishedDate = item.updated;
