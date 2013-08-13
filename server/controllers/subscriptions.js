@@ -72,7 +72,8 @@ exports.create = function(req, res) {
     function(callback) {
       function processFeed(queryResults) {
         var newSubscription = new feed.Model()
-          , channel;
+          , channel
+          , htmlUrl;
 
         if(!queryResults.query || !queryResults.query.results) {
           res.send(500, 'The url informed is not a valid feed url');
@@ -83,12 +84,18 @@ exports.create = function(req, res) {
           newSubscription.user = currentUser._id;
           if(queryResults.query.results.rss) {
             channel = queryResults.query.results.rss.channel;
-            feed.findBy({ htmlurl: channel.link[0] }, function(currentFeed) {
+            if(typeof(channel.link) === 'string') {
+              htmlUrl = channel.link;
+            } else if (channel.link[0].href) {
+              htmlUrl = channel.link[0].href;
+            }
+
+            feed.findBy({ user: currentUser._id, htmlurl: htmlUrl }, function(currentFeed) {
               if (!currentFeed) {
                 newSubscription.title = channel.title;
                 newSubscription.description = channel.description;
                 newSubscription.language = channel.language;
-                newSubscription.htmlurl = channel.link[0];
+                newSubscription.htmlurl = htmlUrl;
                 newSubscription.xmlurl = req.body.url;
                 newSubscription.updated = channel.lastBuildDate;
                 newSubscription.type = 'rss';
@@ -96,11 +103,13 @@ exports.create = function(req, res) {
                   addItemsToSubscription(newSubscription, queryResults);
                   callback(null, '');
                 });
+              } else {
+                callback(null);
               }
             });
           } else {
             channel = queryResults.query.results.feed;
-            feed.findBy({ htmlurl: channel.id }, function(currentFeed) {
+            feed.findBy({ user: currentUser._id, htmlurl: channel.id }, function(currentFeed) {
               if (!currentFeed) {
                 if(typeof(channel.title) === 'string') {
                   newSubscription.title = channel.title;
@@ -116,6 +125,8 @@ exports.create = function(req, res) {
                   addItemsToSubscription(newSubscription, queryResults);
                   callback(null, '');
                 });
+              } else {
+                callback(null);
               }
             });
           }
@@ -128,11 +139,13 @@ exports.create = function(req, res) {
         }
         eval(body);
       });
-    },
-    function (callback) {
-      res.redirect('/list-feeds');
     }
-  ]);
+  ], function(error, results) {
+    if(error) {
+      console.log(error);
+    }
+    res.redirect('/list-feeds');
+  });
 }
 
 exports.delete = function(req, res) {
