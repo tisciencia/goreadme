@@ -102,6 +102,9 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     $http.get($('#refresh').attr('data-url-feeds'))
       .success(function(data) {
         $scope.feeds = data.subscriptions || [];
+        if($scope.feeds.length > 0) {
+          $scope.feeds = _.sortBy($scope.feeds, function(s) { return s.title; });
+        }
         $scope.numfeeds = 0;
         $scope.stories = [];
         $scope.unreadStories = {};
