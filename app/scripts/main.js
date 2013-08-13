@@ -450,27 +450,13 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
       }
     }
 
-    var swap = $scope.opts.sort == 'oldest'
-    if (swap) {
-      // turn off swap for all items mode on a feed
-      if ($scope.activeFeed && $scope.opts.mode == 'all')
-        swap = false;
+    if($scope.opts.sort === 'oldest'){
+      $scope.dispStories = _.sortBy($scope.dispStories, function(s) {return s.publishedDate});
+    } else {
+      $scope.dispStories.sort(function(a, b){
+        return a.publishedDate < b.publishedDate;
+      });
     }
-    $scope.dispStories.sort(function(_a, _b) {
-      var a, b;
-      if (!swap) {
-        a = _a;
-        b = _b;
-      } else {
-        a = _b;
-        b = _a;
-      }
-
-      var d = b.Date - a.Date;
-      if (!d)
-        return a.guid.localeCompare(b.guid);
-      return d;
-    });
   };
 
   $scope.rename = function(feed) {
