@@ -23,7 +23,7 @@ module.exports = function(app, config) {
     app.use(app.router);
     app.use(express.static(path.join(config.root, '/../app')));
     app.use(function(req, res){
-      res.status(404).render('404', { title: "404" });
+      res.status(404).render('404.html', { title: "404", user: req.user });
     });
     // development only
     if ('development' == app.get('env')) {
