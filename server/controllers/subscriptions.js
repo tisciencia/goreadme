@@ -67,7 +67,6 @@ exports.listFeeds = function(req, res) {
           }
         },
         function(error) {
-          console.log(error);
           callback(error);
         });
     },
@@ -281,6 +280,7 @@ function queryFeedUrl(feedUrl, callback) {
 function addItemsToSubscription (subscription, queryResults) {
   function updateSubscription(queryResult) {
     var itemExist, newFeedItem;
+    if(!queryResult.query.results) return;
     if(queryResult.query.results.rss) {
       queryResult.query.results.rss.channel.item.forEach(function(item) {
         itemExist = _.find(subscription.items, function(i) { return i.link === item.link});

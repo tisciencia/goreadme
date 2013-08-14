@@ -5,6 +5,11 @@ exports.findIconFor = function(feed, cb) {
   var iconUrl
     , htmlUrl = feed.htmlurl;
 
+  if(!htmlUrl) {
+    cb();
+    return;
+  }
+
   if(htmlUrl[htmlUrl.length-1] === '/') {
     htmlUrl = htmlUrl.substring(0, htmlUrl.length-1);
   }
