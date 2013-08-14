@@ -470,8 +470,10 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
   $scope.rename = function(feed) {
     var name = prompt('Rename to');
     if (!name) return;
-    $scope.xmlurls[feed].title = name;
-    $scope.uploadOpml();
+    $http.post('/subscriptions/rename', {xmlurl: feed, title: name})
+      .success(function() {
+        $scope.xmlurls[feed].title = name;
+      });
   };
 
   $scope.renameFolder = function(folder) {

@@ -175,6 +175,36 @@ exports.delete = function(req, res) {
   res.send('');
 }
 
+exports.rename = function(req, res) {
+  var userEmail = req.session.passport.user._json.email
+    , currentUser
+    , body = req.body
+    , xmlUrl = body.xmlurl
+    , newTitle = body.title;
+
+  async.series([
+    function(callback) {
+      user.findBy({ email: userEmail }, function(cUser) {
+        currentUser = cUser;
+        callback(null);
+      });
+    },
+    function(callback) {
+      feed.findBy({ user: currentUser._id, xmlurl: xmlUrl }, function(subscription) {
+        if(subscription) {
+          subscription.title = newTitle;
+          subscription.save(function() { callback(null); })
+        } else {
+          callback(null);
+        }
+      });
+    }
+  ],
+    function(error){
+      res.send('');
+  })
+}
+
 exports.moveToFolder = function(req, res) {
   var body = req.body
     , xmlUrl = body.subscription

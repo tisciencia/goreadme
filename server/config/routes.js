@@ -16,6 +16,7 @@ module.exports = function(app) {
   app.post('/add-subscription', authentication.verifyUserAuthenticated, subscriptions.create);
   app.post('/subscriptions/unsubscribe', authentication.verifyUserAuthenticated, subscriptions.delete);
   app.post('/subscriptions/move-to-folder', authentication.verifyUserAuthenticated, subscriptions.moveToFolder);
+  app.post('/subscriptions/rename', authentication.verifyUserAuthenticated, subscriptions.rename);
 
   app.post('/item/mark-read', authentication.verifyUserAuthenticated, items.markAsRead);
   app.post('/item/mark-unread', authentication.verifyUserAuthenticated, items.markAsUnread);
