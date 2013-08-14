@@ -28,5 +28,8 @@ exports.findIconFor = function(feed, cb) {
         }
       });
     }
+    else {
+      if(typeof(cb) === 'function') cb();
+    }
   });
 }

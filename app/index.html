@@ -453,6 +453,7 @@
         </div>
         <div ng-show="activeFeed">
           <a ng-href="{{xmlurls[activeFeed].htmlurl || ''}}" style="color: #333" target="_blank">
+            <img ng-src="{{icons[xmlurls[activeFeed].htmlurl]}}" class="feed-icon" ng-show="icons[xmlurls[activeFeed].htmlurl]" />
             {{active()}} »
           </a>
           <div class="pull-right btn-group config">

@@ -54,6 +54,23 @@ exports.listFeeds = function(req, res) {
         callback(null, subscriptions);
       });
     },
+    // todo: remove this function after a few days
+    function(callback) {
+      async.each(subscriptions,
+        function(s, cb) {
+          if(!s.outline) {
+            iconFinder.findIconFor(s, function(){
+              cb();
+            });
+          } else {
+            cb();
+          }
+        },
+        function(error) {
+          console.log(error);
+          callback(error);
+        });
+    },
     function(callback) {
       var urls = _.map(subscriptions, function(s){ return s.htmlurl || "" });
       icon.findAllBy(urls, function(iconsFound) {
@@ -73,7 +90,8 @@ exports.listFeeds = function(req, res) {
     if(error) {
       console.log(error);
     }
-    res.json({ options: results[1], subscriptions: results[2], icons: results[3] });
+    // todo: change the last index to 3 when removing temporary function
+    res.json({ options: results[1], subscriptions: results[2], icons: results[4] });
   });
 };
 
