@@ -3,6 +3,8 @@ var request = require('request')
   , user = require('../models/user')
   , option = require('../models/option')
   , feedItem = require('../models/feedItem')
+  , icon = require('../models/icon')
+  , iconFinder = require('../lib/iconFinder')
   , _ = require('underscore')
   , async = require('async');
 
@@ -51,12 +53,27 @@ exports.listFeeds = function(req, res) {
         }
         callback(null, subscriptions);
       });
+    },
+    function(callback) {
+      var urls = _.map(subscriptions, function(s){ return s.htmlurl });
+      icon.findAllBy(urls, function(iconsFound) {
+        var iconsToReturn = {};
+        if(iconsFound) {
+
+          iconsFound.forEach(function(i) {
+            iconsToReturn[i.htmlUrl] = i.iconUrl;
+          });
+          callback(null, iconsToReturn);
+        } else {
+          callback(null);
+        }
+      });
     }
   ], function(error, results){
     if(error) {
       console.log(error);
     }
-    res.json({ options: results[1], subscriptions: results[2] });
+    res.json({ options: results[1], subscriptions: results[2], icons: results[3] });
   });
 };
 
@@ -103,6 +120,7 @@ exports.create = function(req, res) {
                 newSubscription.type = 'rss';
                 newSubscription.save(function() {
                   addItemsToSubscription(newSubscription, queryResults);
+                  iconFinder.findIconFor(newSubscription);
                   callback(null, '');
                 });
               } else {

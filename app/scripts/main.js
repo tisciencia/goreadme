@@ -115,7 +115,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
         $scope.unreadStories = {};
         $scope.last = 0;
         $scope.xmlurls = {};
-        $scope.icons = data.Icons;
+        $scope.icons = data.icons;
         $scope.opts = data.options ? JSON.parse(data.options) : $scope.opts;
 
         var loadStories = function(feed) {
