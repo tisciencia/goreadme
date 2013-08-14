@@ -17,7 +17,13 @@ var goReadMeAppModule = angular.module('goReadMeApp', ['ui.sortable']);
 
 goReadMeAppModule.filter('encodeURI', function() {
   return encodeURIComponent;
-})
+});
+
+goReadMeAppModule.filter('momentDate', function() {
+  return function(date) {
+    return moment(date).fromNow();
+  }
+});
 
 goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $window) {
 
