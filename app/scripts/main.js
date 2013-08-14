@@ -477,17 +477,20 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
   };
 
   $scope.renameFolder = function(folder) {
-    var name = prompt('Rename to');
+    var name = prompt('Rename to', folder);
     if (!name) return;
-    for (var i = 0; i < $scope.feeds.length; i++) {
-      var f = $scope.feeds[i];
-      if (f.outline && f.title == folder) {
-        f.title = name;
-        $scope.activeFolder = name;
-        break;
-      }
-    }
-    $scope.uploadOpml();
+
+    $http.post('/folders/rename', { folderName: folder, newFolderName: name })
+      .success(function() {
+        for (var i = 0; i < $scope.feeds.length; i++) {
+          var f = $scope.feeds[i];
+          if (f.outline && f.title == folder) {
+            f.title = name;
+            $scope.activeFolder = name;
+            break;
+          }
+        }
+      });
   };
 
   $scope.deleteFolder = function(folder) {

@@ -30,7 +30,7 @@ exports.listFeeds = function(req, res) {
       })
     },
     function(callback) {
-      feed.findAllBy({ user: currentUser._id }, function(subscriptionsFromUser) {
+      feed.findAllBy({ user: currentUser._id }, 'items', function(subscriptionsFromUser) {
         if(subscriptionsFromUser && subscriptionsFromUser.length > 0) {
 
           subscriptionsFromUser.forEach(addItemsToSubscription);
@@ -55,7 +55,7 @@ exports.listFeeds = function(req, res) {
       });
     },
     function(callback) {
-      var urls = _.map(subscriptions, function(s){ return s.htmlurl });
+      var urls = _.map(subscriptions, function(s){ return s.htmlurl || "" });
       icon.findAllBy(urls, function(iconsFound) {
         var iconsToReturn = {};
         if(iconsFound) {

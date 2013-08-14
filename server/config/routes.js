@@ -8,7 +8,8 @@ module.exports = function(app) {
     , subscriptions = require('../controllers/subscriptions')
     , feedImport = require('../controllers/import')
     , items = require('../controllers/items')
-    , options = require('../controllers/options');
+    , options = require('../controllers/options')
+    , folders = require('../controllers/folders');
 
   app.get('/', home.index);
 
@@ -24,6 +25,8 @@ module.exports = function(app) {
   app.post('/user/get-contents', function(req, res){res.send('')}); // change this
 
   app.post('/options/save', authentication.verifyUserAuthenticated, options.save);
+
+  app.post('/folders/rename', authentication.verifyUserAuthenticated, folders.rename);
 
   app.post('/import-opml', authentication.verifyUserAuthenticated, feedImport.importOmpl);
 

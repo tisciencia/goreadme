@@ -17,9 +17,23 @@ var feed = function() {
 
   var _model = mongoose.model('Feed', _feedSchema);
 
-  var _findAllBy = function(model, success, fail) {
+  var _findAllBy = function() {
+    var model = arguments[0]
+      , populate = ''
+      , success
+      , fail;
+
+    if(typeof(arguments[1]) === 'string') {
+      populate = arguments[1];
+      success = arguments[2];
+      fail = arguments[3];
+    } else {
+      success = arguments[1];
+      fail = arguments[2];
+    }
+
     _model.find(model)
-      .populate('items')
+      .populate(populate)
       .exec(function(error, feeds) {
       if(error) {
         fail(error);
