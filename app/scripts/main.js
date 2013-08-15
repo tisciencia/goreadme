@@ -762,14 +762,18 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
 
   $scope.markUnread = function(storyId) {
     var stories = $scope.stories
-      , i;
+      , i
+      , story;
     for(i = 0; i < stories.length; i++) {
       if(stories[i]._id === storyId) {
-        $scope.stories[i].read = !$scope.unread;
+        story = $scope.stories[i];
+        story.read = !story.read;
+        $scope.unreadStories[story.guid] = !story.read;
+        if(!story.read) $scope.unread['feeds'][story.feed.xmlurl]++;
       }
     }
-    $scope.http('POST', '/item/mark-unread', {storyId: storyId, unread: $scope.unread})
-    $scope.updateStories();
+    $scope.http('POST', '/item/mark-unread', {storyId: storyId, unread: story.read});
+    //$scope.updateStories();
   }
 
   $scope.shareFacebook = function(url) {
