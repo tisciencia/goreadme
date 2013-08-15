@@ -31,6 +31,7 @@ exports.listFeeds = function(req, res) {
     },
     function(callback) {
       feed.findAllBy({ user: currentUser._id }, 'items', function(subscriptionsFromUser) {
+        var unreadItems = [];
         if(subscriptionsFromUser && subscriptionsFromUser.length > 0) {
 
           subscriptionsFromUser.forEach(addItemsToSubscription);
@@ -50,8 +51,26 @@ exports.listFeeds = function(req, res) {
               subscriptions.push(convertToSimpleSubscription(subscription));
             }
           });
+
+          subscriptionsFromUser.forEach(function(s) {
+            if(s.items && s.items.length > 0) {
+              s.items.forEach(function(i){
+                if(!i.read) {
+                  unreadItems.push({ xmlurl: s.xmlurl,
+                    starred: i.starred,
+                    title: i.title,
+                    publishedDate: i.publishedDate,
+                    _id: i._id
+                  });
+                }
+              });
+            }
+          });
+
+          callback(null, { subscriptions: subscriptions, unreadStories: unreadItems });
+        } else {
+          callback();
         }
-        callback(null, subscriptions);
       });
     },
     // todo: remove this function after a few days
@@ -67,7 +86,6 @@ exports.listFeeds = function(req, res) {
           }
         },
         function(error) {
-          console.log(error);
           callback(error);
         });
     },
@@ -90,8 +108,14 @@ exports.listFeeds = function(req, res) {
     if(error) {
       console.log(error);
     }
+    console.log('fim')
     // todo: change the last index to 3 when removing temporary function
-    res.json({ options: results[1], subscriptions: results[2], icons: results[4] });
+    res.json({
+      options: results[1],
+      subscriptions: results[2].subscriptions,
+      unreadStories: results[2].unreadStories,
+      icons: results[4]
+    });
   });
 };
 
@@ -263,7 +287,7 @@ function convertToSimpleSubscription(subscription) {
     title: subscription.title,
     xmlurl: subscription.xmlurl,
     htmlurl: subscription.htmlurl,
-    items: subscription.items,
+    //items: subscription.items,
     itemsCount: subscription.items.length
   }
 }

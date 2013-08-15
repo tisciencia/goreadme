@@ -22,7 +22,8 @@ module.exports = function(app) {
   app.post('/item/mark-read', authentication.verifyUserAuthenticated, items.markAsRead);
   app.post('/item/mark-unread', authentication.verifyUserAuthenticated, items.markAsUnread);
   app.post('/item/mark-starred', authentication.verifyUserAuthenticated, items.markStarred);
-  app.post('/user/get-contents', function(req, res){res.send('')}); // change this
+  app.get('/item/get-contents/:feedUrl', authentication.verifyUserAuthenticated, items.listItemsFromFeed);
+  app.post('/item/get-contents', authentication.verifyUserAuthenticated, items.getContents);
 
   app.post('/options/save', authentication.verifyUserAuthenticated, options.save);
 
