@@ -120,10 +120,12 @@ exports.create = function(req, res) {
             channel = queryResults.query.results.rss.channel;
             if(typeof(channel.link) === 'string') {
               htmlUrl = channel.link;
-            } else if (channel.link[0].href) {
+            } else if (channel.link[0].href && channel.link[0].type !== 'application/rss+xml') {
               htmlUrl = channel.link[0].href;
             } else if (typeof(channel.link[0]) === 'string') {
               htmlUrl = channel.link[0];
+            } else if (typeof(channel.link[1]) === 'string') {
+              htmlUrl = channel.link[1];
             }
 
             feed.findBy({ user: currentUser._id, htmlurl: htmlUrl }, function(currentFeed) {
