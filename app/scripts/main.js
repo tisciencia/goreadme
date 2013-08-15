@@ -565,6 +565,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
     var feed;
     var found = false;
     $http.post('/subscriptions/move-to-folder', { subscription: url, folder: folder }).success(function() {
+
       for (var i = 0; i < $scope.feeds.length; i++) {
         var f = $scope.feeds[i];
         if (f.outline) {
@@ -594,6 +595,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
             outline: [],
             title: folder
           });
+          $scope.unread.folders[folder] = 0;
         }
         for (var i = 0; i < $scope.feeds.length; i++) {
           var f = $scope.feeds[i];
