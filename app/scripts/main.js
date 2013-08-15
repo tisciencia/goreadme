@@ -769,7 +769,16 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
         story = $scope.stories[i];
         story.read = !story.read;
         $scope.unreadStories[story.guid] = !story.read;
-        if(!story.read) $scope.unread['feeds'][story.feed.xmlurl]++;
+        if(!story.read) {
+          $scope.unread['feeds'][story.feed.xmlurl]++;
+        } else {
+          $scope.unread['feeds'][story.feed.xmlurl]--;
+        }
+        if(story.feed.folder && !story.read) {
+          $scope.unread['folders'][story.feed.folder]++;
+        } else if(story.feed.folder && story.read) {
+          $scope.unread['folders'][story.feed.folder]--;
+        }
       }
     }
     $scope.http('POST', '/item/mark-unread', {storyId: storyId, unread: story.read});
