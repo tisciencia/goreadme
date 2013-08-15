@@ -108,7 +108,6 @@ exports.listFeeds = function(req, res) {
     if(error) {
       console.log(error);
     }
-    console.log('fim')
     // todo: change the last index to 3 when removing temporary function
     res.json({
       options: results[1],
