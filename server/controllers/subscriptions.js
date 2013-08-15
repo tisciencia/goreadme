@@ -90,7 +90,18 @@ exports.listFeeds = function(req, res) {
         });
     },
     function(callback) {
-      var urls = _.map(subscriptions, function(s){ return s.htmlurl || "" });
+      var urls = [];
+      subscriptions.forEach(function(s) {
+        if(s.htmlurl) {
+          urls.push(s.htmlurl);
+        } else if(s.outline) {
+          s.outline.forEach(function(o) {
+            if(o.htmlurl) {
+              urls.push(o.htmlurl);
+            }
+          });
+        }
+      });
       icon.findAllBy(urls, function(iconsFound) {
         var iconsToReturn = {};
         if(iconsFound) {
