@@ -1,6 +1,7 @@
 var feed = function() {
   var mongoose = require('mongoose')
-    , Schema = mongoose.Schema;
+    , Schema = mongoose.Schema
+    , async = require('async');
 
   var _feedSchema = new Schema({
     title: String,
@@ -100,17 +101,24 @@ var feed = function() {
   };
 
   var _remove = function(model, success, fail) {
-    _findBy(model, function(subscription) {
+    _findBy(model, {path: 'items'}, function(subscription) {
       if(subscription) {
-        subscription.remove(function(error) {
-          if(error && fail && typeof(fail) === 'function') {
-            fail();
-          } else {
-            if(success && typeof(success) === 'function') {
-              success();
-            }
-          }
-        })
+        async.each(subscription.items,
+          function(i, cb){
+            i.remove();
+            cb();
+          },
+          function(){
+            subscription.remove(function(error) {
+              if(error && fail && typeof(fail) === 'function') {
+                fail();
+              } else {
+                if(success && typeof(success) === 'function') {
+                  success();
+                }
+              }
+            })
+        });
       }
     })
   }
