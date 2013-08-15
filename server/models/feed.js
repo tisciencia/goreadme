@@ -43,14 +43,41 @@ var feed = function() {
     });
   }
 
-  var _findBy = function(model, success, fail) {
-    _model.findOne(model, function(error, feed) {
-      if(error) {
-        fail(error);
-      } else {
-        success(feed);
-      }
-    });
+  var _findBy = function() {
+    var model = arguments[0]
+      , populate
+      , success
+      , fail;
+
+    if(typeof(arguments[1]) === 'object') {
+      populate = arguments[1];
+      success = arguments[2];
+      fail = arguments[3];
+    } else {
+      success = arguments[1];
+      fail = arguments[2];
+    }
+
+    if(populate) {
+      _model.findOne(model)
+        .populate(populate)
+        .exec(function(error, feed) {
+          if(error) {
+            fail(error);
+          } else {
+            success(feed);
+          }
+        });
+    } else {
+      _model.findOne(model)
+        .exec(function(error, feed) {
+          if(error) {
+            fail(error);
+          } else {
+            success(feed);
+          }
+        });
+    }
   };
 
   var _create = function(model, success, fail) {
