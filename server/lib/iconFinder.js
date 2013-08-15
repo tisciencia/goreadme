@@ -15,15 +15,9 @@ exports.findIconFor = function(feed, cb) {
   }
   iconUrl = htmlUrl + '/favicon.ico';
 
-  console.log(iconUrl);
   request(iconUrl, function(error, response, body) {
 
-    if(response && response.headers) {
-      console.log(response.headers['content-type']);
-    }
-
     if(error) {
-      console.log(error);
       if(typeof(cb) === 'function') cb(null);
     } else if (response.headers['content-type'] === 'image/x-icon' || body.substring(0, 1) === '\u0000') {
 
