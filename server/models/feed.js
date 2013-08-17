@@ -24,7 +24,7 @@ var feed = function() {
       , success
       , fail;
 
-    if(typeof(arguments[1]) === 'string') {
+    if(typeof(arguments[1]) === 'object') {
       populate = arguments[1];
       success = arguments[2];
       fail = arguments[3];

@@ -288,7 +288,7 @@ module.exports = function (grunt) {
             'clean:server',
             'concurrent:server',
             'express:livereload',
-            'open',
+            //'open',
             'watch'
         ]);
     });

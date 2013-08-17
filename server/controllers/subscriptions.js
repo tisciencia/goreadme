@@ -30,7 +30,7 @@ exports.listFeeds = function(req, res) {
             })
         },
         function(callback) {
-            feed.findAllBy({ user: currentUser._id }, 'items', function(subscriptionsFromUser) {
+            feed.findAllBy({ user: currentUser._id }, { path: 'items' }, function(subscriptionsFromUser) {
                 var unreadItems = [];
                 if(subscriptionsFromUser && subscriptionsFromUser.length > 0) {
 
@@ -59,6 +59,7 @@ exports.listFeeds = function(req, res) {
                                     unreadItems.push({ xmlurl: s.xmlurl,
                                         starred: i.starred,
                                         title: i.title,
+                                        link: i.link,
                                         publishedDate: i.publishedDate,
                                         _id: i._id
                                     });
