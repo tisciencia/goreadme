@@ -70,7 +70,7 @@ exports.listFeeds = function(req, res) {
 
                     callback(null, { subscriptions: subscriptions, unreadStories: unreadItems });
                 } else {
-                    callback();
+                    callback(null, {});
                 }
             });
         },
