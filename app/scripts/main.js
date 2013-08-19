@@ -1,18 +1,18 @@
 $('.dropdown-toggle').dropdown();
 
-var goReadMeAppModule = angular.module('goReadMeApp', ['ui.sortable']);
+//var goReadMeAppModule = angular.module('goReadMeApp', ['ui.sortable']);
 
-goReadMeAppModule.filter('encodeURI', function() {
+goreadmeApp.filter('encodeURI', function() {
     return encodeURIComponent;
 });
 
-goReadMeAppModule.filter('momentDate', function() {
+goreadmeApp.filter('momentDate', function() {
     return function(date) {
         return moment(date).fromNow();
     };
 });
 
-goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $window) {
+goreadmeApp.controller('goReadMeCtrl', function($scope, $http, $timeout, $window) {
 
     $scope.accessToken = '';
     $scope.admin = false;
@@ -372,10 +372,9 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
         }
     };
 
-    $scope.getContents = function(s, cb) {
-        var story = s;
+    $scope.getContents = function(story, cb) {
         if (typeof $scope.contents[story.guid] !== 'undefined') {
-            return;
+            cb();
         }
         // for the moment when I'm downloading all contents at startup
         if (story.content && typeof(story.content) === 'string') {
@@ -394,6 +393,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
         var storyToFetch = {feed: story.feed.xmlurl, story: story._id};
         $http.post($('#mark-all-read').attr('data-url-contents'), storyToFetch)
             .success(function(data) {
+                story.content = data.content;
                 $scope.contents[story.guid] = data.content;
                 if(typeof(cb) === 'function') {
                     cb();
@@ -855,7 +855,7 @@ goReadMeAppModule.controller('goReadMeCtrl', function($scope, $http, $timeout, $
 
 });
 
-goReadMeAppModule.directive('stopEvent', function() {
+goreadmeApp.directive('stopEvent', function() {
     return {
         restrict: 'A',
         link: function(scope, element, attr) {

@@ -1,6 +1,6 @@
 {
-  "name": "noread",
-  "version": "0.0.1",
+  "name": "goreadme",
+  "version": "0.1.0",
   "dependencies": {
     "express": "3.2.3",
     "jade": "*",

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="goReadMeApp">
+<html lang="en" ng-app="goreadmeApp">
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -501,7 +501,7 @@
             from <a ng-href="{{s.feed.htmlurl}}" ng-bind="s.feed.title" target="_blank"></a>
             <span ng-show="s.author">by {{s.author}}</span>
           </small></p>
-          <div ng-bind-html-unsafe="contents[s.guid]" class="clearfix"></div>
+          <div ng-bind-html-unsafe="s.content" class="clearfix"></div>
         </div>
           <div class="story-footer" ng-show="$index == currentStory || opts.expanded">
               <ul class="inline">
@@ -744,10 +744,11 @@ analytics"></a></div></noscript>
   <!-- End of StatCounter Code for Default Guide -->
 
   <!-- build:js scripts/main.js -->
-  <script src="scripts/main.js"></script>
   <!-- endbuild -->
 
   <!-- build:js(.tmp) scripts/coffee.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/main.js"></script>
   <!-- endbuild -->
 </body>
 </html>
