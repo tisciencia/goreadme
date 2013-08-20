@@ -5,21 +5,20 @@ basePath = '';
 
 // list of files / patterns to load in the browser
 files = [
-	JASMINE,
-	JASMINE_ADAPTER,
-	'app/scripts/vendor/angular/angular.js',
-	'app/components/angular-mocks/angular-mocks.js',
-	'app/scripts/*.js',
-	'app/scripts/**/*.js',
-	'test/mock/**/*.js',
-	'test/spec/**/*.js'
+  JASMINE,
+  JASMINE_ADAPTER,
+  'app/components/angular/angular.js',
+  'app/components/angular-mocks/angular-mocks.js',
+  'app/scripts/*.js',
+  'app/scripts/**/*.js',
+  'test/mock/**/*.js',
+  'test/spec/**/*.js'
 ];
 
 // list of files to exclude
-
 exclude = [
 	'app/scripts/main.js',
-	'app/scripts/vendor/*.js'
+	'app/scripts/vendor/**/*.js'
 ];
 
 // test results reporter to use

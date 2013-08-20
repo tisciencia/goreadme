@@ -2,10 +2,6 @@ $('.dropdown-toggle').dropdown();
 
 //var goReadMeAppModule = angular.module('goReadMeApp', ['ui.sortable']);
 
-goreadmeApp.filter('encodeURI', function() {
-    return encodeURIComponent;
-});
-
 goreadmeApp.filter('momentDate', function() {
     return function(date) {
         return moment(date).fromNow();
