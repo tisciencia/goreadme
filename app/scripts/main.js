@@ -842,8 +842,9 @@ goreadmeApp.controller('goReadMeCtrl', function($scope, $http, $timeout, $window
                 }
             }
         }
-        $scope.http('POST', '/item/mark-unread', {storyId: storyId, unread: story.read});
-        //$scope.updateStories();
+        $scope.http('POST', '/item/mark-unread', {storyId: storyId, unread: story.read}).success(function() {
+            $scope.updateUnread();
+        });
     };
 
     $scope.shareFacebook = function(url) {
