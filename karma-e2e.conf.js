@@ -5,9 +5,9 @@ basePath = '';
 
 // list of files / patterns to load in the browser
 files = [
-	ANGULAR_SCENARIO,
-	ANGULAR_SCENARIO_ADAPTER,
-	'test/e2e/**/*.js'
+  ANGULAR_SCENARIO,
+  ANGULAR_SCENARIO_ADAPTER,
+  'test/e2e/**/*.js'
 ];
 
 // list of files to exclude
@@ -49,3 +49,10 @@ captureTimeout = 5000;
 // Continuous Integration mode
 // if true, it capture browsers, run tests and exit
 singleRun = false;
+
+// Uncomment the following lines if you are using grunt's server to run the tests
+// proxies = {
+//   '/': 'http://localhost:9000/'
+// };
+// URL root prevent conflicts with the site root
+// urlRoot = '_karma_';
