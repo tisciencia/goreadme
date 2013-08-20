@@ -37,7 +37,7 @@ module.exports = function(app) {
   app.post('/imports/opml', authentication.verifyUserAuthenticated, feedImport.importOmpl); // '/import-opml'
 
   // session ou authentication
-  app.get('/session,
+  app.get('/session',
     passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
       'https://www.googleapis.com/auth/userinfo.email'] }),
       function(req, res){
