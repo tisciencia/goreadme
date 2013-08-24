@@ -24,9 +24,6 @@ exports.googleCallback = function(req, res) {
 }
 
 exports.verifyUserAuthenticated = function(req, res, next) {
-  if(!req.session.passport.user) {
-    res.redirect('/');
-  } else {
-    next();
-  }
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/')
 }

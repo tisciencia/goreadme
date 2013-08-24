@@ -1,13 +1,16 @@
 var passport = require('passport')
   , settings = require('./google-settings')
-  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+  , user = require('../models/user');
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
+    done(null, user._json.email);
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+passport.deserializeUser(function(email, done) {
+    user.findBy({email: email}, function(user) {
+        done(null, user);
+    });
 });
 
 passport.use(new GoogleStrategy({
